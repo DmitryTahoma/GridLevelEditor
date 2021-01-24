@@ -4,6 +4,14 @@
              xmlns:local="clr-namespace:GridLevelEditor"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style x:Key="CenterInput"
+                   TargetType="TextBox">
+                <Setter Property="MinWidth" Value="100"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="TextAlignment" Value="Center"/>
+                <Setter Property="MaxLength" Value="2"/>
+            </Style>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
