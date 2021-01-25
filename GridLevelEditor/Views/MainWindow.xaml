@@ -37,8 +37,7 @@
 
             <Button Content="Создать"
                     Padding="10, 0"
-                    Margin="25, 0, 0, 0">
-                
+                    Margin="25, 0">                
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
                         <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=CreateGrid}"
@@ -46,8 +45,18 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
+
+            <Label Content="Размер клетки:"
+                   VerticalAlignment="Center"/>
+            <TextBox Width="30"
+                     MaxLength="2"
+                     Text="{Binding SizeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     TextAlignment="Center"/>
         </StackPanel>
         <Grid Grid.Row="1"
-              x:Name="GridLevel"/>
+              x:Name="GridLevel"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Margin="10"/>
     </Grid>
 </Window>

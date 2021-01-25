@@ -2,16 +2,19 @@
 using Catel.MVVM;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using System.Windows.Data;
+using System.Windows.Media.Imaging;
 
 namespace GridLevelEditor.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private Grid grid;
+
         public MainWindowViewModel()
         {
+            grid = null;
             CreateGrid = new Command<Grid>(OnCreateGridExecute);
-
             TitleText = "Grid Level Editor v1.0";
         }
 
@@ -36,9 +39,22 @@ namespace GridLevelEditor.ViewModels
         }
         public static readonly PropertyData HeightTextProperty = RegisterProperty(nameof(HeightText), typeof(string), "");
 
+        public string SizeText
+        {
+            get => GetValue<string>(SizeTextProperty);
+            set 
+            {
+                SetValue(SizeTextProperty, ValidateToInt(GetValue<string>(SizeTextProperty), value));
+                UpdateSize();
+            }
+        }
+        public static readonly PropertyData SizeTextProperty = RegisterProperty(nameof(SizeText), typeof(string), "50");
+
         public Command<Grid> CreateGrid { get; private set; }
         private void OnCreateGridExecute(Grid levelGrid)
         {
+            grid = levelGrid;
+
             levelGrid.RowDefinitions.Clear();
             levelGrid.ColumnDefinitions.Clear();
             levelGrid.Children.Clear();
@@ -46,15 +62,17 @@ namespace GridLevelEditor.ViewModels
             int rows = Parse(HeightText),
                 columns = Parse(WidthText);
 
-            for(int i = 0; i < columns; ++i)
+            GridLength size = new GridLength(Parse(SizeText));
+
+            for (int i = 0; i < columns; ++i)
             {
-                levelGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                levelGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = size });
             }
             if(columns != 0)
             {
                 for(int i = 0; i < rows; ++i)
                 {
-                    levelGrid.RowDefinitions.Add(new RowDefinition());
+                    levelGrid.RowDefinitions.Add(new RowDefinition() { Height = size });
                 }
             }
 
@@ -62,10 +80,12 @@ namespace GridLevelEditor.ViewModels
             {
                 for (int j = 0; j < rows; ++j) 
                 {
-                    TextBlock tb = new TextBlock() { Text = $"{i}:{j}" };
-                    levelGrid.Children.Add(tb);
-                    Grid.SetColumn(tb, i);
-                    Grid.SetRow(tb, j);
+                    Image imageControl = new Image();
+                    BitmapImage img = new BitmapImage(new System.Uri("pack://application:,,,/Resources/void.png"));
+                    imageControl.Source = img;
+                    levelGrid.Children.Add(imageControl);
+                    Grid.SetColumn(imageControl, i);
+                    Grid.SetRow(imageControl, j);
                 }
             }
         }
@@ -82,6 +102,24 @@ namespace GridLevelEditor.ViewModels
             if (int.TryParse(text, out int res))
                 return res;
             return 0;
+        }
+
+        public void UpdateSize()
+        {
+            if(grid != null)
+            {
+                GridLength size = new GridLength(Parse(SizeText));
+
+                foreach(ColumnDefinition it in grid.ColumnDefinitions)
+                {
+                    it.Width = size;
+                }
+
+                foreach(RowDefinition it in grid.RowDefinitions)
+                {
+                    it.Height = size;
+                }
+            }
         }
     }
 }
