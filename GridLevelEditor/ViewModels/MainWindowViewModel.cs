@@ -1,6 +1,7 @@
 ﻿using Catel.Data;
 using Catel.MVVM;
 using GridLevelEditor.Models;
+using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -19,6 +20,7 @@ namespace GridLevelEditor.ViewModels
 
             CreateGrid = new Command<Grid>(OnCreateGridExecute);
             Closing = new Command(OnClosingExecute);
+            AddImage = new Command<StackPanel>(OnAddImageExecute);
 
             string levelName = "";
             if (model.LevelName != "")
@@ -104,6 +106,35 @@ namespace GridLevelEditor.ViewModels
         private void OnClosingExecute()
         {
             model.Save();
+        }
+
+        public Command<StackPanel> AddImage { get; private set; }
+        private void OnAddImageExecute(StackPanel stackPanel)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.Title = "Выберите изображение";
+            dialog.Filter = "Изображение (*.bmp;*.jpg;*.gif;*.png)|*.bmp;*.jpg;*.gif;*.png";
+            dialog.ShowDialog();
+            string filename = dialog.FileName;
+
+            BitmapImage image = new BitmapImage(new System.Uri(filename));
+            if(image.PixelWidth != image.PixelHeight)
+            {
+                System.Windows.Forms.DialogResult res =
+                    System.Windows.Forms.MessageBox.Show("Соотношение сторон картинки не 1:1!\nВы уверенны, что хотите продолжить?", 
+                                                         "Не стандартное соотношение сторон", 
+                                                         System.Windows.Forms.MessageBoxButtons.YesNo,
+                                                         System.Windows.Forms.MessageBoxIcon.Error, 
+                                                         System.Windows.Forms.MessageBoxDefaultButton.Button2);
+                if(res == System.Windows.Forms.DialogResult.No)
+                {
+                    return;
+                }
+            }
+
+            Image control = new Image();
+            control.Source = image;
+            stackPanel.Children.Add(control);
         }
 
         public string ValidateToInt(string curValue, string nextValue)
