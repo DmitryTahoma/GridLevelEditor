@@ -1,8 +1,8 @@
 ﻿using Catel.Data;
 using Catel.MVVM;
+using GridLevelEditor.Models;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media.Imaging;
 
 namespace GridLevelEditor.ViewModels
@@ -10,12 +10,22 @@ namespace GridLevelEditor.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private Grid grid;
+        private LevelEditor model;
 
         public MainWindowViewModel()
         {
             grid = null;
+            model = new LevelEditor();
+
             CreateGrid = new Command<Grid>(OnCreateGridExecute);
-            TitleText = "Grid Level Editor v1.0";
+            Closing = new Command(OnClosingExecute);
+
+            string levelName = "";
+            if (model.LevelName != "")
+            {
+                levelName = " | " + model.LevelName;
+            }
+            TitleText = "Grid Level Editor v1.0" + levelName;
         }
 
         public string TitleText
@@ -88,6 +98,12 @@ namespace GridLevelEditor.ViewModels
                     Grid.SetRow(imageControl, j);
                 }
             }
+        }
+
+        public Command Closing { get; private set; }
+        private void OnClosingExecute()
+        {
+            model.Save();
         }
 
         public string ValidateToInt(string curValue, string nextValue)

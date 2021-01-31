@@ -127,6 +127,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Objects\FileIO.cs" />
+    <Compile Include="Models\LevelEditor.cs" />
+    <Compile Include="Objects\Level.cs" />
+    <Compile Include="Objects\MgElem.cs" />
+    <Compile Include="Objects\Splitter.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -160,9 +165,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\icon.png" />
   </ItemGroup>
