@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="GridLevelEditor.Controls.MgElemControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GridLevelEditor.Controls"
+             xmlns:vm="clr-namespace:GridLevelEditor.ViewModels.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:catel="http://schemas.catelproject.com"
+             mc:Ignorable="d" 
+             d:DesignHeight="79" d:DesignWidth="54">
+    <UserControl.DataContext>
+        <vm:MgElemControlViewModel x:Name="ViewModel"/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="2"/>
+        </Grid.ColumnDefinitions>
+        
+        <Rectangle Stroke="Red"
+                   StrokeThickness="2"
+                   Height="83"
+                   Width="54"
+                   Grid.RowSpan="2"
+                   Grid.ColumnSpan="3"
+                   Fill="Transparent"
+                   Visibility="{Binding ElementName=ViewModel, Path=SelectVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        
+        <StackPanel Orientation="Vertical"
+                    Grid.Column="1"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+            
+            <Image x:Name="ImgControl"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Height="{Binding ElementName=ViewModel, Path=ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                   Width="{Binding ElementName=ViewModel, Path=ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                   Source="{Binding ElementName=ViewModel, Path=ImageSource, Mode=Default, UpdateSourceTrigger=PropertyChanged}"/>
+
+            <TextBox HorizontalAlignment="Center"
+                     VerticalAlignment="Center"
+                     FontSize="20"
+                     MinWidth="{Binding ElementName=ViewModel, Path=ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     MaxWidth="{Binding ElementName=ViewModel, Path=ImageSize, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                     Text="{Binding ElementName=ViewModel, Path=TextIndex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        </StackPanel>
+        
+    </Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindImageSource}"
+                                  CommandParameter="{Binding ElementName=ImgControl}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+</UserControl>

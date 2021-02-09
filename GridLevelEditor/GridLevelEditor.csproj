@@ -120,6 +120,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\MgElemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -128,11 +132,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\MgElemControl.xaml.cs">
+      <DependentUpon>MgElemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Objects\FileIO.cs" />
     <Compile Include="Models\LevelEditor.cs" />
     <Compile Include="Objects\Level.cs" />
     <Compile Include="Objects\MgElem.cs" />
     <Compile Include="Objects\Splitter.cs" />
+    <Compile Include="ViewModels\Controls\MgElemControlViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

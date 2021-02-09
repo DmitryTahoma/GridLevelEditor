@@ -1,9 +1,12 @@
 ﻿using Catel.Data;
 using Catel.MVVM;
+using GridLevelEditor.Controls;
 using GridLevelEditor.Models;
 using Microsoft.Win32;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 
 namespace GridLevelEditor.ViewModels
@@ -12,11 +15,13 @@ namespace GridLevelEditor.ViewModels
     {
         private Grid grid;
         private LevelEditor model;
+        private List<MgElemControl> imagesSelect;
 
         public MainWindowViewModel()
         {
             grid = null;
             model = new LevelEditor();
+            imagesSelect = new List<MgElemControl>();
 
             CreateGrid = new Command<Grid>(OnCreateGridExecute);
             Closing = new Command(OnClosingExecute);
@@ -29,6 +34,8 @@ namespace GridLevelEditor.ViewModels
             }
             TitleText = "Grid Level Editor v1.0" + levelName;
         }
+
+        #region Properties
 
         public string TitleText
         {
@@ -61,6 +68,10 @@ namespace GridLevelEditor.ViewModels
             }
         }
         public static readonly PropertyData SizeTextProperty = RegisterProperty(nameof(SizeText), typeof(string), "50");
+
+        #endregion
+
+        #region Commands
 
         public Command<Grid> CreateGrid { get; private set; }
         private void OnCreateGridExecute(Grid levelGrid)
@@ -117,25 +128,38 @@ namespace GridLevelEditor.ViewModels
             dialog.ShowDialog();
             string filename = dialog.FileName;
 
-            BitmapImage image = new BitmapImage(new System.Uri(filename));
-            if(image.PixelWidth != image.PixelHeight)
+            if (filename != "")
             {
-                System.Windows.Forms.DialogResult res =
-                    System.Windows.Forms.MessageBox.Show("Соотношение сторон картинки не 1:1!\nВы уверенны, что хотите продолжить?", 
-                                                         "Не стандартное соотношение сторон", 
-                                                         System.Windows.Forms.MessageBoxButtons.YesNo,
-                                                         System.Windows.Forms.MessageBoxIcon.Error, 
-                                                         System.Windows.Forms.MessageBoxDefaultButton.Button2);
-                if(res == System.Windows.Forms.DialogResult.No)
+                BitmapImage image = new BitmapImage(new System.Uri(filename));
+                if (image.PixelWidth != image.PixelHeight)
                 {
-                    return;
+                    System.Windows.Forms.DialogResult res =
+                        System.Windows.Forms.MessageBox.Show("Соотношение сторон картинки не 1:1!\nВы уверенны, что хотите продолжить?",
+                                                             "Не стандартное соотношение сторон",
+                                                             System.Windows.Forms.MessageBoxButtons.YesNo,
+                                                             System.Windows.Forms.MessageBoxIcon.Error,
+                                                             System.Windows.Forms.MessageBoxDefaultButton.Button2);
+                    if (res == System.Windows.Forms.DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+
+                MgElemControl control = new MgElemControl();
+                control.ViewModel.ImageSource = image;
+                control.ViewModel.ImageSize = Parse(SizeText);
+                control.ImgControl.MouseDown += SelectImage;
+                stackPanel.Children.Add(control);
+                imagesSelect.Add(control);
+
+                if(imagesSelect.Count == 1)
+                {
+                    control.ViewModel.SelectVisibility = Visibility.Visible;
                 }
             }
-
-            Image control = new Image();
-            control.Source = image;
-            stackPanel.Children.Add(control);
         }
+
+        #endregion
 
         public string ValidateToInt(string curValue, string nextValue)
         {
@@ -165,6 +189,28 @@ namespace GridLevelEditor.ViewModels
                 foreach(RowDefinition it in grid.RowDefinitions)
                 {
                     it.Height = size;
+                }
+            }
+        }
+
+        private void SelectImage(object sender, MouseButtonEventArgs e)
+        {
+            if(sender != null && sender is Image snd)
+            {
+                MgElemControl sndr = null;
+
+                foreach (MgElemControl img in imagesSelect)
+                {
+                    img.ViewModel.SelectVisibility = Visibility.Hidden;
+                    if(snd == img.ImgControl && sndr == null)
+                    {
+                        sndr = img;
+                    }
+                }
+
+                if(sndr != null)
+                {
+                    sndr.ViewModel.SelectVisibility = Visibility.Visible;
                 }
             }
         }
