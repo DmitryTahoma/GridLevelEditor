@@ -8,6 +8,7 @@
             public static string Level { get => "<\blvl\b>"; }
             public static string Column { get => "<\blvldatacol\b>"; }
             public static string Row { get => "<\blvldatarow\b>"; }
+            public static string Void { get => "<\bvoid\b/>"; }
         }
     }
 }

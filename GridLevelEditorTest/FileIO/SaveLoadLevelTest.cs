@@ -67,6 +67,7 @@ namespace GridLevelEditorTest
             level.Width = 10;
             level.Elems.Add(new MgElem() { Id = "1_id", Image = new BitmapImage(new Uri(@"D:\Projects\GridLevelEditor\GridLevelEditorTest\TestResources\back.png")) });
             level.Elems.Add(new MgElem() { Id = "100", Image = new BitmapImage(new Uri(@"D:\Projects\GridLevelEditor\GridLevelEditorTest\TestResources\border.png")) });
+            level.Elems.Add(new MgElem() { Id = "", Image = new BitmapImage(new Uri(@"D:\Projects\GridLevelEditor\GridLevelEditorTest\TestResources\border.png")) });
             level.Data = new string[10][];
             Random rand = new Random();
 

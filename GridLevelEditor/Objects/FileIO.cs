@@ -49,9 +49,14 @@ namespace GridLevelEditor.Objects
             string[] levelElemsArray = levelElems.Split(new string[] { Splitter.Level }, System.StringSplitOptions.RemoveEmptyEntries);
             for(int i = 0; i < levelElemsArray.Length - 1; i += 2)
             {
+                string id = levelElemsArray[i];
+                if(id == Splitter.Void)
+                {
+                    id = "";
+                }
                 level.Elems.Add(new MgElem() 
                 {
-                    Id = levelElemsArray[i],
+                    Id = id,
                     Image = new System.Windows.Media.Imaging.BitmapImage(new System.Uri(levelElemsArray[i + 1]))
                 });
             }
@@ -79,7 +84,10 @@ namespace GridLevelEditor.Objects
             string levelElems = "";
             foreach(MgElem elem in level.Elems)
             {
-                levelElems += elem.Id + Splitter.Level + elem.Image.UriSource.LocalPath + Splitter.Level;
+                string elemId = elem.Id;
+                if (elemId == "")
+                    elemId = Splitter.Void;
+                levelElems += elemId + Splitter.Level + elem.Image.UriSource.LocalPath + Splitter.Level;
             }
 
             string levelData = "";
