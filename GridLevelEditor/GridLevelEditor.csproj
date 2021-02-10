@@ -141,6 +141,7 @@
     <Compile Include="Models\LevelEditor.cs" />
     <Compile Include="Objects\Level.cs" />
     <Compile Include="Objects\MgElem.cs" />
+    <Compile Include="Objects\ResourceDriver.cs" />
     <Compile Include="Objects\Splitter.cs" />
     <Compile Include="ViewModels\Controls\MgElemControlViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />

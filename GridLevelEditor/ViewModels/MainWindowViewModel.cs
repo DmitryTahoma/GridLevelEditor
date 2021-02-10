@@ -110,9 +110,7 @@ namespace GridLevelEditor.ViewModels
             {
                 for (int j = 0; j < rows; ++j) 
                 {
-                    Image imageControl = new Image();
-                    BitmapImage img = new BitmapImage(new System.Uri("pack://application:,,,/Resources/void.png"));
-                    imageControl.Source = img;
+                    Image imageControl = controlCreator.CreateVoidImage(ChangeImage);
                     levelGrid.Children.Add(imageControl);
                     Grid.SetColumn(imageControl, i);
                     Grid.SetRow(imageControl, j);
@@ -235,6 +233,22 @@ namespace GridLevelEditor.ViewModels
             }
 
             return null;
+        }
+
+        private void ChangeImage(object sender, MouseEventArgs e)
+        {
+            if(sender != null && sender is Image img)
+            {
+                MgElemControl selected = GetSelected();
+                if(selected != null && e.LeftButton == MouseButtonState.Pressed)
+                {
+                    img.Source = selected.ViewModel.ImageSource;
+                }
+                else if(e.RightButton == MouseButtonState.Pressed)
+                {
+                    img.Source = ResourceDriver.GetVoidBmp();
+                }
+            }
         }
     }
 }
