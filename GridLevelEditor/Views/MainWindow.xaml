@@ -62,15 +62,32 @@
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Orientation="Horizontal"/>
-            <Button Content="Добавить" 
-                    Padding="10, 10">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=AddImage}"
-                                              CommandParameter="{Binding ElementName=Images}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Content="Добавить" 
+                        Padding="5"
+                        Grid.Row="0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=AddMgElem}"
+                                                  CommandParameter="{Binding ElementName=Images}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="Удалить"
+                        Padding="5"
+                        Grid.Row="1">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=RemoveMgElem}"
+                                                  CommandParameter="{Binding ElementName=Images}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </Grid>
         </StackPanel>
         <Grid Grid.Row="2"
               x:Name="GridLevel"

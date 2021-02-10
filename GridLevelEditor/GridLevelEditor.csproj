@@ -135,6 +135,8 @@
     <Compile Include="Controls\MgElemControl.xaml.cs">
       <DependentUpon>MgElemControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Objects\ControlCreator.cs" />
+    <Compile Include="Objects\DialogManager.cs" />
     <Compile Include="Objects\FileIO.cs" />
     <Compile Include="Models\LevelEditor.cs" />
     <Compile Include="Objects\Level.cs" />

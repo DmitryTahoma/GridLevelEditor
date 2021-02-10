@@ -2,7 +2,7 @@
 using Catel.MVVM;
 using GridLevelEditor.Controls;
 using GridLevelEditor.Models;
-using Microsoft.Win32;
+using GridLevelEditor.Objects;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,15 +17,22 @@ namespace GridLevelEditor.ViewModels
         private LevelEditor model;
         private List<MgElemControl> imagesSelect;
 
+        private DialogManager dialogManager;
+        private ControlCreator controlCreator;
+
         public MainWindowViewModel()
         {
             grid = null;
             model = new LevelEditor();
             imagesSelect = new List<MgElemControl>();
 
+            dialogManager = new DialogManager();
+            controlCreator = new ControlCreator();
+
             CreateGrid = new Command<Grid>(OnCreateGridExecute);
             Closing = new Command(OnClosingExecute);
-            AddImage = new Command<StackPanel>(OnAddImageExecute);
+            AddMgElem = new Command<StackPanel>(OnAddMgElemExecute);
+            RemoveMgElem = new Command<StackPanel>(OnRemoveMgElemExecute);
 
             string levelName = "";
             if (model.LevelName != "")
@@ -119,42 +126,41 @@ namespace GridLevelEditor.ViewModels
             model.Save();
         }
 
-        public Command<StackPanel> AddImage { get; private set; }
-        private void OnAddImageExecute(StackPanel stackPanel)
+        public Command<StackPanel> AddMgElem { get; private set; }
+        private void OnAddMgElemExecute(StackPanel stackPanel)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Title = "Выберите изображение";
-            dialog.Filter = "Изображение (*.bmp;*.jpg;*.gif;*.png)|*.bmp;*.jpg;*.gif;*.png";
-            dialog.ShowDialog();
-            string filename = dialog.FileName;
+            string filename = dialogManager.GetImageFilepath();
 
             if (filename != "")
             {
                 BitmapImage image = new BitmapImage(new System.Uri(filename));
-                if (image.PixelWidth != image.PixelHeight)
+                if (image.PixelWidth != image.PixelHeight && dialogManager.PictureNot1to1() == System.Windows.Forms.DialogResult.No)
                 {
-                    System.Windows.Forms.DialogResult res =
-                        System.Windows.Forms.MessageBox.Show("Соотношение сторон картинки не 1:1!\nВы уверенны, что хотите продолжить?",
-                                                             "Не стандартное соотношение сторон",
-                                                             System.Windows.Forms.MessageBoxButtons.YesNo,
-                                                             System.Windows.Forms.MessageBoxIcon.Error,
-                                                             System.Windows.Forms.MessageBoxDefaultButton.Button2);
-                    if (res == System.Windows.Forms.DialogResult.No)
-                    {
-                        return;
-                    }
+                    return;                    
                 }
 
-                MgElemControl control = new MgElemControl();
-                control.ViewModel.ImageSource = image;
-                control.ViewModel.ImageSize = Parse(SizeText);
-                control.ImgControl.MouseDown += SelectImage;
+                MgElemControl control = controlCreator.CreateMgElemControl(Parse(SizeText), image, SelectImage);
                 stackPanel.Children.Add(control);
                 imagesSelect.Add(control);
 
                 if(imagesSelect.Count == 1)
                 {
                     control.ViewModel.SelectVisibility = Visibility.Visible;
+                }
+            }
+        }
+
+        public Command<StackPanel> RemoveMgElem { get; private set; }
+        private void OnRemoveMgElemExecute(StackPanel stackPanel)
+        {
+            var selected = GetSelected();
+            if (selected != null)
+            {
+                stackPanel.Children.Remove(selected);
+                imagesSelect.Remove(selected);
+                if(imagesSelect.Count != 0)
+                {
+                    imagesSelect[0].ViewModel.SelectVisibility = Visibility.Visible;
                 }
             }
         }
@@ -213,6 +219,22 @@ namespace GridLevelEditor.ViewModels
                     sndr.ViewModel.SelectVisibility = Visibility.Visible;
                 }
             }
+        }
+
+        private MgElemControl GetSelected()
+        {
+            if(imagesSelect.Count != 0)
+            {
+                foreach(MgElemControl control in imagesSelect)
+                {
+                    if(control.ViewModel.SelectVisibility == Visibility.Visible)
+                    {
+                        return control;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
