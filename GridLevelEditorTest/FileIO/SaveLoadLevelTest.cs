@@ -27,7 +27,14 @@ namespace GridLevelEditorTest
             {
                 for(int i = 0; i < level.Elems.Count; ++i)
                 {
-                    Assert.AreEqual(level.Elems[i].Id, loadedLevel.Elems[i].Id);
+                    if(level.Elems[i].Id != null)
+                    {
+                        Assert.AreEqual(level.Elems[i].Id, loadedLevel.Elems[i].Id);
+                    }
+                    else
+                    {
+                        Assert.AreEqual("", loadedLevel.Elems[i].Id);
+                    }
                     Assert.AreEqual(level.Elems[i].Image.UriSource.LocalPath, loadedLevel.Elems[i].Image.UriSource.LocalPath);
                 }
 
@@ -68,6 +75,7 @@ namespace GridLevelEditorTest
             level.Elems.Add(new MgElem() { Id = "1_id", Image = new BitmapImage(new Uri(@"D:\Projects\GridLevelEditor\GridLevelEditorTest\TestResources\back.png")) });
             level.Elems.Add(new MgElem() { Id = "100", Image = new BitmapImage(new Uri(@"D:\Projects\GridLevelEditor\GridLevelEditorTest\TestResources\border.png")) });
             level.Elems.Add(new MgElem() { Id = "", Image = new BitmapImage(new Uri(@"D:\Projects\GridLevelEditor\GridLevelEditorTest\TestResources\border.png")) });
+            level.Elems.Add(new MgElem() { Id = null, Image = new BitmapImage(new Uri(@"D:\Projects\GridLevelEditor\GridLevelEditorTest\TestResources\border.png")) });
             level.Data = new string[10][];
             Random rand = new Random();
 

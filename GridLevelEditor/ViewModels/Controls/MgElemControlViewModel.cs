@@ -52,7 +52,7 @@ namespace GridLevelEditor.ViewModels.Controls
                 model.Id = value;
             }
         }
-        public static readonly PropertyData TextIndexProperty = RegisterProperty(nameof(TextIndex), typeof(string));
+        public static readonly PropertyData TextIndexProperty = RegisterProperty(nameof(TextIndex), typeof(string), "");
 
         public double ImageSize
         {

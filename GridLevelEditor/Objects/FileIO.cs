@@ -85,7 +85,7 @@ namespace GridLevelEditor.Objects
             foreach(MgElem elem in level.Elems)
             {
                 string elemId = elem.Id;
-                if (elemId == "")
+                if (elemId == "" || elemId == null)
                     elemId = Splitter.Void;
                 levelElems += elemId + Splitter.Level + elem.Image.UriSource.LocalPath + Splitter.Level;
             }
