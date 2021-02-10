@@ -1,6 +1,7 @@
 ﻿using Catel.Data;
 using GridLevelEditor.Objects;
 using System;
+using System.Collections.Generic;
 
 namespace GridLevelEditor.Models
 {
@@ -39,6 +40,26 @@ namespace GridLevelEditor.Models
                 level.Name = "tempsave_" + DateTime.Now.ToString("dd'_'MM'_'yyyy'_'fffffff");
             FileIO.SaveLastData(LevelName);
             FileIO.SaveLevelData(level);
+        }
+
+        public void AddMgElem(MgElem elem)
+        {
+            level.Elems.Add(elem);
+        }
+
+        public void RemoveMgElem(MgElem elem)
+        {
+            level.Elems.Remove(elem);
+        }
+
+        public List<MgElem> GetElems()
+        {
+            return level.Elems;
+        }
+
+        public void ClearElems()
+        {
+            level.Elems.Clear();
         }
     }
 }

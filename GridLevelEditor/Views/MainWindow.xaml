@@ -99,5 +99,9 @@
         <i:EventTrigger EventName="Closing">
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=Closing}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindStackPanel}"
+                                  CommandParameter="{Binding ElementName=Images}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 </Window>

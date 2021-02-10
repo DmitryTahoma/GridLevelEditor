@@ -1,5 +1,6 @@
 ﻿using Catel.Data;
 using Catel.MVVM;
+using GridLevelEditor.Objects;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -8,10 +9,12 @@ namespace GridLevelEditor.ViewModels.Controls
 {
     class MgElemControlViewModel : ViewModelBase
     {
+        private MgElem model;
         private Image imageControl;
 
         public MgElemControlViewModel()
         {
+            model = new MgElem();
             imageControl = null;
 
             BindImageSource = new Command<Image>(OnBindImageSourceExecute);
@@ -31,10 +34,10 @@ namespace GridLevelEditor.ViewModels.Controls
             get => GetValue<BitmapImage>(ImageSourceProperty);
             set 
             {
-                SetValue(ImageSourceProperty, value); 
-                if(imageControl != null && value != null)
+                if(value != null)
                 {
                     SetValue(ImageSourceProperty, value);
+                    model.Image = value;
                 }
             }
         }
@@ -43,7 +46,11 @@ namespace GridLevelEditor.ViewModels.Controls
         public string TextIndex
         {
             get => GetValue<string>(TextIndexProperty);
-            set => SetValue(TextIndexProperty, value);
+            set 
+            {
+                SetValue(TextIndexProperty, value);
+                model.Id = value;
+            }
         }
         public static readonly PropertyData TextIndexProperty = RegisterProperty(nameof(TextIndex), typeof(string));
 
@@ -66,5 +73,10 @@ namespace GridLevelEditor.ViewModels.Controls
         }
 
         #endregion
+
+        public MgElem GetModel()
+        {
+            return model;
+        }
     }
 }

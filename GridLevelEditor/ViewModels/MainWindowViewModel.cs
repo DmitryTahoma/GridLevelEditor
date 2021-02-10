@@ -29,10 +29,13 @@ namespace GridLevelEditor.ViewModels
             dialogManager = new DialogManager();
             controlCreator = new ControlCreator();
 
+            CreateLoadedControls();
+
             CreateGrid = new Command<Grid>(OnCreateGridExecute);
             Closing = new Command(OnClosingExecute);
             AddMgElem = new Command<StackPanel>(OnAddMgElemExecute);
             RemoveMgElem = new Command<StackPanel>(OnRemoveMgElemExecute);
+            BindStackPanel = new Command<StackPanel>(OnBindStackPanelExecute);
 
             string levelName = "";
             if (model.LevelName != "")
@@ -140,6 +143,7 @@ namespace GridLevelEditor.ViewModels
                 MgElemControl control = controlCreator.CreateMgElemControl(Parse(SizeText), image, SelectImage);
                 stackPanel.Children.Add(control);
                 imagesSelect.Add(control);
+                model.AddMgElem(control.ViewModel.GetModel());
 
                 if(imagesSelect.Count == 1)
                 {
@@ -156,10 +160,23 @@ namespace GridLevelEditor.ViewModels
             {
                 stackPanel.Children.Remove(selected);
                 imagesSelect.Remove(selected);
+                model.RemoveMgElem(selected.ViewModel.GetModel());
+
                 if(imagesSelect.Count != 0)
                 {
                     imagesSelect[0].ViewModel.SelectVisibility = Visibility.Visible;
                 }
+            }
+        }
+
+        public Command<StackPanel> BindStackPanel { get; private set; }
+        private void OnBindStackPanelExecute(StackPanel stackPanel)
+        {
+            model.ClearElems();
+            foreach(MgElemControl control in imagesSelect)
+            {
+                stackPanel.Children.Add(control);
+                model.AddMgElem(control.ViewModel.GetModel());
             }
         }
 
@@ -248,6 +265,17 @@ namespace GridLevelEditor.ViewModels
                 {
                     img.Source = ResourceDriver.GetVoidBmp();
                 }
+            }
+        }
+
+        private void CreateLoadedControls()
+        {
+            List<MgElem> elems = model.GetElems();
+            foreach(MgElem elem in elems)
+            {
+                MgElemControl control = controlCreator.CreateMgElemControl(Parse(SizeText), elem.Image, SelectImage);
+                control.ViewModel.TextIndex = elem.Id;
+                imagesSelect.Add(control);
             }
         }
     }
