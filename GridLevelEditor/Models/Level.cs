@@ -1,6 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using GridLevelEditor.Objects;
+using System.Collections.Generic;
 
-namespace GridLevelEditor.Objects
+namespace GridLevelEditor.Models
 {
     public class Level
     {

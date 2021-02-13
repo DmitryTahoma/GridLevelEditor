@@ -3,6 +3,7 @@ using Catel.MVVM;
 using GridLevelEditor.Controls;
 using GridLevelEditor.Models;
 using GridLevelEditor.Objects;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,6 +37,7 @@ namespace GridLevelEditor.ViewModels
             AddMgElem = new Command<StackPanel>(OnAddMgElemExecute);
             RemoveMgElem = new Command<StackPanel>(OnRemoveMgElemExecute);
             BindStackPanel = new Command<StackPanel>(OnBindStackPanelExecute);
+            BindGrid = new Command<Grid>(OnBindGridExecute);
 
             string levelName = "";
             if (model.LevelName != "")
@@ -95,6 +97,8 @@ namespace GridLevelEditor.ViewModels
             int rows = Parse(HeightText),
                 columns = Parse(WidthText);
 
+            model.SetLevelSize(rows, columns);
+
             GridLength size = new GridLength(Parse(SizeText));
 
             for (int i = 0; i < columns; ++i)
@@ -124,7 +128,16 @@ namespace GridLevelEditor.ViewModels
         public Command Closing { get; private set; }
         private void OnClosingExecute()
         {
-            model.Save();
+            try
+            {
+                KeyValuePair<int, int> size = model.GetLevelSize();            
+                model.UpdateData(GridDataTransformer.GetLevelDataFromGrid(grid, size, model.GetElems()));
+                model.Save();
+            }
+            catch(Exception e)
+            {
+                dialogManager.SavingError(e.ToString());
+            }
         }
 
         public Command<StackPanel> AddMgElem { get; private set; }
@@ -178,6 +191,28 @@ namespace GridLevelEditor.ViewModels
                 stackPanel.Children.Add(control);
                 model.AddMgElem(control.ViewModel.GetModel());
             }
+        }
+
+        public Command<Grid> BindGrid { get; private set; }
+        private void OnBindGridExecute(Grid grid)
+        {
+            GridLength size = new GridLength(Parse(SizeText));
+            KeyValuePair<int, int> levelSize = model.GetLevelSize();
+
+            for (int i = 0; i < levelSize.Value; ++i)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = size });
+            }
+            if (levelSize.Value != 0)
+            {
+                for (int i = 0; i < levelSize.Key; ++i)
+                {
+                    grid.RowDefinitions.Add(new RowDefinition() { Height = size });
+                }
+            }
+
+            GridDataTransformer.FillGridFromLevelData(grid, model.GetLevelData(), levelSize, model.GetElems(), ChangeImage);
+            this.grid = grid;
         }
 
         #endregion

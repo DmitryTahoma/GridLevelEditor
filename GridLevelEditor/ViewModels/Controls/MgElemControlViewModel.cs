@@ -1,6 +1,6 @@
 ﻿using Catel.Data;
 using Catel.MVVM;
-using GridLevelEditor.Objects;
+using GridLevelEditor.Models;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;

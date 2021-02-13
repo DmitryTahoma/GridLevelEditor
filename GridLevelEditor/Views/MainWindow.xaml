@@ -103,5 +103,9 @@
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindStackPanel}"
                                   CommandParameter="{Binding ElementName=Images}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindGrid}"
+                                  CommandParameter="{Binding ElementName=GridLevel}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 </Window>

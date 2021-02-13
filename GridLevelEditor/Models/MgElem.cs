@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media.Imaging;
 
-namespace GridLevelEditor.Objects
+namespace GridLevelEditor.Models
 {
     public class MgElem
     {

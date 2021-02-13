@@ -21,5 +21,14 @@ namespace GridLevelEditor.Objects
                                    MessageBoxIcon.Error,
                                    MessageBoxDefaultButton.Button2);
         }
+
+        public DialogResult SavingError(string errorMessage)
+        {
+            return MessageBox.Show("Во время сохранения произошла ошибка!\n" + errorMessage,
+                                   "Ошибка сохранения",
+                                   MessageBoxButtons.OK,
+                                   MessageBoxIcon.Error,
+                                   MessageBoxDefaultButton.Button1);
+        }
     }
 }

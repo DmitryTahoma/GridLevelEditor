@@ -136,11 +136,12 @@
       <DependentUpon>MgElemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Objects\ControlCreator.cs" />
+    <Compile Include="Objects\GridDataTransformer.cs" />
     <Compile Include="Objects\DialogManager.cs" />
     <Compile Include="Objects\FileIO.cs" />
     <Compile Include="Models\LevelEditor.cs" />
-    <Compile Include="Objects\Level.cs" />
-    <Compile Include="Objects\MgElem.cs" />
+    <Compile Include="Models\Level.cs" />
+    <Compile Include="Models\MgElem.cs" />
     <Compile Include="Objects\ResourceDriver.cs" />
     <Compile Include="Objects\Splitter.cs" />
     <Compile Include="ViewModels\Controls\MgElemControlViewModel.cs" />

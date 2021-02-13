@@ -61,5 +61,26 @@ namespace GridLevelEditor.Models
         {
             level.Elems.Clear();
         }
+
+        public void SetLevelSize(int height, int width)
+        {
+            level.Height = height;
+            level.Width = width;
+        }
+
+        public KeyValuePair<int, int> GetLevelSize()
+        {
+            return new KeyValuePair<int, int>(level.Height, level.Width);
+        }
+
+        public void UpdateData(string[][] data)
+        {
+            level.Data = data;
+        }
+
+        public string[][] GetLevelData()
+        {
+            return level.Data;
+        }
     }
 }
