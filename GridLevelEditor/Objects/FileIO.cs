@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using GridLevelEditor.Models;
+using System.IO;
 
 namespace GridLevelEditor.Objects
 {
@@ -73,6 +74,8 @@ namespace GridLevelEditor.Objects
                 level.Data[i] = new string[cols.Length];
                 for(int j = 0; j < cols.Length; ++j)
                 {
+                    if (cols[j] == Splitter.Void)
+                        cols[j] = "";
                     level.Data[i][j] = cols[j];
                 }
             }
@@ -95,7 +98,10 @@ namespace GridLevelEditor.Objects
             {
                 foreach(string str in strdata)
                 {
-                    levelData += str + Splitter.Row;
+                    string s = str;
+                    if (s == "" || s == null)
+                        s = Splitter.Void;
+                    levelData += s + Splitter.Row;
                 }
                 levelData += Splitter.Column;
             }

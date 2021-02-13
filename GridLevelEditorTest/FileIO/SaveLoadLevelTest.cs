@@ -1,4 +1,5 @@
-﻿using GridLevelEditor.Objects;
+﻿using GridLevelEditor.Models;
+using GridLevelEditor.Objects;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Windows.Media.Imaging;
@@ -46,7 +47,14 @@ namespace GridLevelEditorTest
                         {
                             for(int j = 0; j < level.Data[i].Length; ++j)
                             {
-                                Assert.AreEqual(level.Data[i][j], loadedLevel.Data[i][j]);
+                                if(level.Data[i][j] != null)
+                                {
+                                    Assert.AreEqual(level.Data[i][j], loadedLevel.Data[i][j]);
+                                }
+                                else
+                                {
+                                    Assert.AreEqual("", loadedLevel.Data[i][j]);
+                                }
                             }
                         }
                         else
@@ -84,12 +92,14 @@ namespace GridLevelEditorTest
                 level.Data[i] = new string[10];
                 for (int j = 0; j < 10; ++j)
                 {
-                    int next = rand.Next(0, 2);
+                    int next = rand.Next(0, 4);
                     switch (next)
                     {
                         default: level.Data[i][j] = "void"; break;
                         case 1: level.Data[i][j] = "1_id"; break;
-                        case 2: level.Data[i][j] = "100"; break;
+                        case 2: level.Data[i][j] = null; break;
+                        case 3: level.Data[i][j] = ""; break;
+                        case 4: level.Data[i][j] = "100"; break;
                     }
                 }
             }
