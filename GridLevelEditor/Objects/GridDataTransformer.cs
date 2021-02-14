@@ -39,9 +39,21 @@ namespace GridLevelEditor.Objects
             return data;
         }
 
-        public static void FillGridFromLevelData(Grid grid, string[][] data, KeyValuePair<int, int> levelSize, List<MgElem> keys, MouseEventHandler imageChanger)
+        public static void FillGridFromLevelData(Grid grid, GridLength gridSize, string[][] data, KeyValuePair<int, int> levelSize, List<MgElem> keys, MouseEventHandler imageChanger)
         {
             ControlCreator creator = new ControlCreator();
+
+            for (int i = 0; i < levelSize.Value; ++i)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = gridSize });
+            }
+            if (levelSize.Value != 0)
+            {
+                for (int i = 0; i < levelSize.Key; ++i)
+                {
+                    grid.RowDefinitions.Add(new RowDefinition() { Height = gridSize });
+                }
+            }
 
             for (int i = 0; i < levelSize.Key; ++i)
             {

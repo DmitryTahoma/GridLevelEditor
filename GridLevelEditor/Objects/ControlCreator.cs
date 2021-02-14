@@ -1,4 +1,5 @@
 ﻿using GridLevelEditor.Controls;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -24,6 +25,38 @@ namespace GridLevelEditor.Objects
             control.MouseDown += (s, e) => { imageChanger(s, e); };
 
             return control;
+        }
+
+        public void FillLevelGrid(Grid levelGrid, int rows, int columns, int size, MouseEventHandler imageChanger)
+        {
+            levelGrid.RowDefinitions.Clear();
+            levelGrid.ColumnDefinitions.Clear();
+            levelGrid.Children.Clear();
+
+            GridLength gridSize = new GridLength(size);
+
+            for (int i = 0; i < columns; ++i)
+            {
+                levelGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = gridSize });
+            }
+            if (columns != 0)
+            {
+                for (int i = 0; i < rows; ++i)
+                {
+                    levelGrid.RowDefinitions.Add(new RowDefinition() { Height = gridSize });
+                }
+            }
+
+            for (int i = 0; i < columns; ++i)
+            {
+                for (int j = 0; j < rows; ++j)
+                {
+                    Image imageControl = CreateVoidImage(imageChanger);
+                    levelGrid.Children.Add(imageControl);
+                    Grid.SetColumn(imageControl, i);
+                    Grid.SetRow(imageControl, j);
+                }
+            }
         }
     }
 }

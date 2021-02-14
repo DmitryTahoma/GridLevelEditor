@@ -41,8 +41,7 @@
                     Margin="25, 0">                
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="Click">
-                        <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=CreateGrid}"
-                                              CommandParameter="{Binding ElementName=GridLevel}"/>
+                        <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=CreateGrid}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
             </Button>
@@ -72,8 +71,7 @@
                         Grid.Row="0">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=AddMgElem}"
-                                                  CommandParameter="{Binding ElementName=Images}"/>
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=AddMgElem}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>
@@ -82,8 +80,7 @@
                         Grid.Row="1">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=RemoveMgElem}"
-                                                  CommandParameter="{Binding ElementName=Images}"/>
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=RemoveMgElem}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </Button>

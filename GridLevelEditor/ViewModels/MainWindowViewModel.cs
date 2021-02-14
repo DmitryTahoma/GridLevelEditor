@@ -15,6 +15,8 @@ namespace GridLevelEditor.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private Grid grid;
+        private StackPanel mgElemsStack;
+
         private LevelEditor model;
         private List<MgElemControl> imagesSelect;
 
@@ -23,21 +25,23 @@ namespace GridLevelEditor.ViewModels
 
         public MainWindowViewModel()
         {
-            grid = null;
-            model = new LevelEditor();
-            imagesSelect = new List<MgElemControl>();
-
             dialogManager = new DialogManager();
             controlCreator = new ControlCreator();
 
-            CreateLoadedControls();
+            grid = null;
+            mgElemsStack = null;
 
-            CreateGrid = new Command<Grid>(OnCreateGridExecute);
-            Closing = new Command(OnClosingExecute);
-            AddMgElem = new Command<StackPanel>(OnAddMgElemExecute);
-            RemoveMgElem = new Command<StackPanel>(OnRemoveMgElemExecute);
-            BindStackPanel = new Command<StackPanel>(OnBindStackPanelExecute);
-            BindGrid = new Command<Grid>(OnBindGridExecute);
+            try
+            {
+                model = new LevelEditor();
+            }
+            catch(Exception e)
+            {
+                dialogManager.LoadLevelError(e.ToString());
+            }
+            imagesSelect = new List<MgElemControl>();
+
+            CreateLoadedControls();
 
             string levelName = "";
             if (model.LevelName != "")
@@ -45,6 +49,14 @@ namespace GridLevelEditor.ViewModels
                 levelName = " | " + model.LevelName;
             }
             TitleText = "Grid Level Editor v1.0" + levelName;
+            SelectedMgElem = null;
+
+            CreateGrid = new Command(OnCreateGridExecute);
+            Closing = new Command(OnClosingExecute);
+            AddMgElem = new Command(OnAddMgElemExecute);
+            RemoveMgElem = new Command(OnRemoveMgElemExecute);
+            BindStackPanel = new Command<StackPanel>(OnBindStackPanelExecute);
+            BindGrid = new Command<Grid>(OnBindGridExecute);
         }
 
         #region Properties
@@ -73,7 +85,7 @@ namespace GridLevelEditor.ViewModels
         public string SizeText
         {
             get => GetValue<string>(SizeTextProperty);
-            set 
+            set
             {
                 SetValue(SizeTextProperty, ValidateToInt(GetValue<string>(SizeTextProperty), value));
                 UpdateSize();
@@ -85,44 +97,13 @@ namespace GridLevelEditor.ViewModels
 
         #region Commands
 
-        public Command<Grid> CreateGrid { get; private set; }
-        private void OnCreateGridExecute(Grid levelGrid)
+        public Command CreateGrid { get; private set; }
+        private void OnCreateGridExecute()
         {
-            grid = levelGrid;
-
-            levelGrid.RowDefinitions.Clear();
-            levelGrid.ColumnDefinitions.Clear();
-            levelGrid.Children.Clear();
-
             int rows = Parse(HeightText),
                 columns = Parse(WidthText);
-
             model.SetLevelSize(rows, columns);
-
-            GridLength size = new GridLength(Parse(SizeText));
-
-            for (int i = 0; i < columns; ++i)
-            {
-                levelGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = size });
-            }
-            if(columns != 0)
-            {
-                for(int i = 0; i < rows; ++i)
-                {
-                    levelGrid.RowDefinitions.Add(new RowDefinition() { Height = size });
-                }
-            }
-
-            for(int i = 0; i < columns; ++i)
-            {
-                for (int j = 0; j < rows; ++j) 
-                {
-                    Image imageControl = controlCreator.CreateVoidImage(ChangeImage);
-                    levelGrid.Children.Add(imageControl);
-                    Grid.SetColumn(imageControl, i);
-                    Grid.SetRow(imageControl, j);
-                }
-            }
+            controlCreator.FillLevelGrid(grid, rows, columns, Parse(SizeText), ChangeImage);
         }
 
         public Command Closing { get; private set; }
@@ -130,54 +111,54 @@ namespace GridLevelEditor.ViewModels
         {
             try
             {
-                KeyValuePair<int, int> size = model.GetLevelSize();            
-                model.UpdateData(GridDataTransformer.GetLevelDataFromGrid(grid, size, model.GetElems()));
+                model.UpdateData(GridDataTransformer.GetLevelDataFromGrid(grid, model.GetLevelSize(), model.GetElems()));
                 model.Save();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 dialogManager.SavingError(e.ToString());
             }
         }
 
-        public Command<StackPanel> AddMgElem { get; private set; }
-        private void OnAddMgElemExecute(StackPanel stackPanel)
+        public Command AddMgElem { get; private set; }
+        private void OnAddMgElemExecute()
         {
             string filename = dialogManager.GetImageFilepath();
 
             if (filename != "")
             {
-                BitmapImage image = new BitmapImage(new System.Uri(filename));
+                BitmapImage image = new BitmapImage(new Uri(filename));
                 if (image.PixelWidth != image.PixelHeight && dialogManager.PictureNot1to1() == System.Windows.Forms.DialogResult.No)
                 {
-                    return;                    
+                    return;
                 }
 
                 MgElemControl control = controlCreator.CreateMgElemControl(Parse(SizeText), image, SelectImage);
-                stackPanel.Children.Add(control);
+                mgElemsStack.Children.Add(control);
                 imagesSelect.Add(control);
                 model.AddMgElem(control.ViewModel.GetModel());
 
-                if(imagesSelect.Count == 1)
+                if (imagesSelect.Count == 1)
                 {
                     control.ViewModel.SelectVisibility = Visibility.Visible;
                 }
             }
         }
 
-        public Command<StackPanel> RemoveMgElem { get; private set; }
-        private void OnRemoveMgElemExecute(StackPanel stackPanel)
+        public Command RemoveMgElem { get; private set; }
+        private void OnRemoveMgElemExecute()
         {
-            var selected = GetSelected();
+            var selected = SelectedMgElem;
             if (selected != null)
             {
-                stackPanel.Children.Remove(selected);
+                mgElemsStack.Children.Remove(selected);
                 imagesSelect.Remove(selected);
                 model.RemoveMgElem(selected.ViewModel.GetModel());
 
-                if(imagesSelect.Count != 0)
+                if (imagesSelect.Count != 0)
                 {
                     imagesSelect[0].ViewModel.SelectVisibility = Visibility.Visible;
+                    SelectedMgElem = imagesSelect[0];
                 }
             }
         }
@@ -185,8 +166,10 @@ namespace GridLevelEditor.ViewModels
         public Command<StackPanel> BindStackPanel { get; private set; }
         private void OnBindStackPanelExecute(StackPanel stackPanel)
         {
+            mgElemsStack = stackPanel;
+
             model.ClearElems();
-            foreach(MgElemControl control in imagesSelect)
+            foreach (MgElemControl control in imagesSelect)
             {
                 stackPanel.Children.Add(control);
                 model.AddMgElem(control.ViewModel.GetModel());
@@ -196,24 +179,18 @@ namespace GridLevelEditor.ViewModels
         public Command<Grid> BindGrid { get; private set; }
         private void OnBindGridExecute(Grid grid)
         {
-            GridLength size = new GridLength(Parse(SizeText));
-            KeyValuePair<int, int> levelSize = model.GetLevelSize();
-
-            for (int i = 0; i < levelSize.Value; ++i)
+            try
             {
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = size });
+                GridDataTransformer.FillGridFromLevelData(grid, new GridLength(Parse(SizeText)), model.GetLevelData(), model.GetLevelSize(), model.GetElems(), ChangeImage);
             }
-            if (levelSize.Value != 0)
+            catch(Exception e)
             {
-                for (int i = 0; i < levelSize.Key; ++i)
-                {
-                    grid.RowDefinitions.Add(new RowDefinition() { Height = size });
-                }
+                dialogManager.GridCreationError(e.ToString());
             }
-
-            GridDataTransformer.FillGridFromLevelData(grid, model.GetLevelData(), levelSize, model.GetElems(), ChangeImage);
             this.grid = grid;
         }
+
+        private MgElemControl SelectedMgElem { set; get; }
 
         #endregion
 
@@ -267,34 +244,18 @@ namespace GridLevelEditor.ViewModels
                 if(sndr != null)
                 {
                     sndr.ViewModel.SelectVisibility = Visibility.Visible;
+                    SelectedMgElem = sndr;
                 }
             }
-        }
-
-        private MgElemControl GetSelected()
-        {
-            if(imagesSelect.Count != 0)
-            {
-                foreach(MgElemControl control in imagesSelect)
-                {
-                    if(control.ViewModel.SelectVisibility == Visibility.Visible)
-                    {
-                        return control;
-                    }
-                }
-            }
-
-            return null;
         }
 
         private void ChangeImage(object sender, MouseEventArgs e)
         {
             if(sender != null && sender is Image img)
             {
-                MgElemControl selected = GetSelected();
-                if(selected != null && e.LeftButton == MouseButtonState.Pressed)
+                if(SelectedMgElem != null && e.LeftButton == MouseButtonState.Pressed)
                 {
-                    img.Source = selected.ViewModel.ImageSource;
+                    img.Source = SelectedMgElem.ViewModel.ImageSource;
                 }
                 else if(e.RightButton == MouseButtonState.Pressed)
                 {

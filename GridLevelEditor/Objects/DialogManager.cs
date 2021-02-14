@@ -24,8 +24,26 @@ namespace GridLevelEditor.Objects
 
         public DialogResult SavingError(string errorMessage)
         {
-            return MessageBox.Show("Во время сохранения произошла ошибка!\n" + errorMessage,
-                                   "Ошибка сохранения",
+            return ErrorMessageBox("Во время сохранения произошла ошибка!\n" + errorMessage,
+                                   "Ошибка сохранения");
+        }
+
+        public DialogResult GridCreationError(string errorMessage)
+        {
+            return ErrorMessageBox("Во время создания уровня произошла ошибка!\n" + errorMessage,
+                                   "Ошибка создания уровня");
+        }
+
+        public DialogResult LoadLevelError(string errorMessage)
+        {
+            return ErrorMessageBox("Во время загрузки уровня из файла произошла ошибка!\n" + errorMessage,
+                                   "Ошибка чтения уровня из файла");
+        }
+
+        private DialogResult ErrorMessageBox(string text, string caption)
+        {
+            return MessageBox.Show(text, 
+                                   caption,
                                    MessageBoxButtons.OK,
                                    MessageBoxIcon.Error,
                                    MessageBoxDefaultButton.Button1);
