@@ -7,6 +7,7 @@
         xmlns:vm="clr-namespace:GridLevelEditor.ViewModels"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:catel="http://schemas.catelproject.com"
+        xmlns:controls="clr-namespace:GridLevelEditor.Controls"
         mc:Ignorable="d"
         Title="{Binding TitleText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
         Height="450" Width="800"
@@ -14,95 +15,25 @@
     <Window.DataContext>
         <vm:MainWindowViewModel x:Name="ViewModel"/>
     </Window.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <StackPanel Grid.Row="0" 
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Center"
-                    Margin="0, 10, 0, 0">
-            
-            <Label Content="Ширина: "
-                   VerticalAlignment="Center"/>
-            <TextBox Style="{StaticResource CenterInput}"
-                     Text="{Binding WidthText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-            
-            <Label Content="Высота: "
-                   VerticalAlignment="Center"
-                   Margin="25, 0, 0, 0"/>
-            <TextBox Style="{StaticResource CenterInput}"
-                     Text="{Binding HeightText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-            <Button Content="Создать"
-                    Padding="10, 0"
-                    Margin="25, 0">                
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="Click">
-                        <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=CreateGrid}"/>
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </Button>
-
-            <Label Content="Размер клетки:"
-                   VerticalAlignment="Center"/>
-            <TextBox Width="30"
-                     MaxLength="2"
-                     Text="{Binding SizeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                     TextAlignment="Center"/>
-        </StackPanel>
-        <StackPanel Grid.Row="1"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-            <StackPanel x:Name="Images"
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        Orientation="Horizontal"/>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Button Content="Добавить" 
-                        Padding="5"
-                        Grid.Row="0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=AddMgElem}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-                <Button Content="Удалить"
-                        Padding="5"
-                        Grid.Row="1">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=RemoveMgElem}"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </Button>
-            </Grid>
-        </StackPanel>
-        <Grid Grid.Row="2"
-              x:Name="GridLevel"
-              HorizontalAlignment="Center"
-              VerticalAlignment="Center"
-              Margin="10"/>
-    </Grid>
+    <TabControl SelectedIndex="{Binding ElementName=ViewModel, Path=SelectedTapId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <TabItem Visibility="Visible">
+            <controls:StartWindow x:Name="StartWindow"/>
+        </TabItem>
+        <TabItem Visibility="Visible">
+            <controls:LevelContent x:Name="LevelContent"/>
+        </TabItem>
+    </TabControl>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=Closing}"/>
         </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
-            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindStackPanel}"
-                                  CommandParameter="{Binding ElementName=Images}"/>
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindStartWindow}"
+                                  CommandParameter="{Binding ElementName=StartWindow}"/>
         </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
-            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindGrid}"
-                                  CommandParameter="{Binding ElementName=GridLevel}"/>
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindLevelContent}"
+                                  CommandParameter="{Binding ElementName=LevelContent}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 </Window>

@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="GridLevelEditor.Controls.LevelContent"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GridLevelEditor.Controls"
+             xmlns:vm="clr-namespace:GridLevelEditor.ViewModels.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:catel="http://schemas.catelproject.com"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <vm:LevelContentViewModel x:Name="ViewModel"/>
+    </UserControl.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Orientation="Horizontal">
+            <StackPanel x:Name="Images"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Button Content="Добавить" 
+                        Padding="5"
+                        Grid.Row="0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=AddMgElem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+                <Button Content="Удалить"
+                        Padding="5"
+                        Grid.Row="1">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=RemoveMgElem}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </Button>
+            </Grid>
+        </StackPanel>
+        <Grid Grid.Row="1"
+              x:Name="GridLevel"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center"
+              Margin="10"/>
+    </Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindStackPanel}"
+                                  CommandParameter="{Binding ElementName=Images}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindGrid}"
+                                  CommandParameter="{Binding ElementName=GridLevel}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+</UserControl>

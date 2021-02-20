@@ -12,6 +12,22 @@
                 <Setter Property="TextAlignment" Value="Center"/>
                 <Setter Property="MaxLength" Value="2"/>
             </Style>
+            <Style x:Key="MiddleFont">
+                <Setter Property="Control.FontSize" Value="20"/>
+            </Style>
+            <Style x:Key="RightTableText"
+                   TargetType="TextBlock"
+                   BasedOn="{StaticResource MiddleFont}">
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="0, 0, 20, 0"/>
+            </Style>
+            <Style x:Key="LeftTableInput"
+                   TargetType="TextBox"
+                   BasedOn="{StaticResource MiddleFont}">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Padding" Value="20, 0, 0, 0"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

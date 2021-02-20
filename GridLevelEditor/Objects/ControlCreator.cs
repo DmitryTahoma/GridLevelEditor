@@ -27,7 +27,7 @@ namespace GridLevelEditor.Objects
             return control;
         }
 
-        public void FillLevelGrid(Grid levelGrid, int rows, int columns, int size, MouseEventHandler imageChanger)
+        public void FillLevelGrid(ref Grid levelGrid, int rows, int columns, int size, MouseEventHandler imageChanger)
         {
             levelGrid.RowDefinitions.Clear();
             levelGrid.ColumnDefinitions.Clear();

@@ -41,6 +41,10 @@ namespace GridLevelEditor.Objects
 
         public static void FillGridFromLevelData(Grid grid, GridLength gridSize, string[][] data, KeyValuePair<int, int> levelSize, List<MgElem> keys, MouseEventHandler imageChanger)
         {
+            grid.Children.Clear();
+            grid.ColumnDefinitions.Clear();
+            grid.RowDefinitions.Clear();
+
             ControlCreator creator = new ControlCreator();
 
             for (int i = 0; i < levelSize.Value; ++i)
