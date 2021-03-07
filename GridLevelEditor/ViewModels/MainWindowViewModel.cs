@@ -12,6 +12,7 @@ namespace GridLevelEditor.ViewModels
     {
         private StartWindow startWindow;
         private LevelContent levelContent;
+        private OpenLevelForm openLevelForm;
 
         private DialogManager dialogManager;
 
@@ -20,28 +21,34 @@ namespace GridLevelEditor.ViewModels
         public MainWindowViewModel()
         {
             startWindow = null;
+            levelContent = null;
+            openLevelForm = null;
 
             dialogManager = new DialogManager();
+
+            IsLevelOpen = false;
 
             try
             {
                 model = new LevelEditor();
+                if(model.IsLoaded)
+                {
+                    SelectedTabId = 1;
+                    IsLevelOpen = true;
+                }
             }
             catch (Exception e)
             {
                 dialogManager.LoadLevelError(e.ToString());
             }
-
-            string levelName = "";
-            if (model.LevelName != "")
-            {
-                levelName = " | " + model.LevelName;
-            }
-            TitleText = "Grid Level Editor v1.0" + levelName;
+            UpdateTitle();
 
             Closing = new Command(OnClosingExecute);
             BindStartWindow = new Command<StartWindow>(OnBindStartWindowExecute);
             BindLevelContent = new Command<LevelContent>(OnBindLevelContentExecute);
+            BindOpenLevelForm = new Command<OpenLevelForm>(OnBindOpenLevelFormExecute);
+            CreateNewLevel = new Command(OnCreateNewLevelExecute);
+            OpenExistsLevel = new Command(OnOpenExistsLevelExecute);
         }
 
         #region Properties
@@ -53,12 +60,14 @@ namespace GridLevelEditor.ViewModels
         }
         public static readonly PropertyData TitleTextProperty = RegisterProperty(nameof(TitleText), typeof(string), "");
 
-        public int SelectedTapId
+        public int SelectedTabId
         {
-            get => GetValue<int>(SelectedTapIdProperty);
-            set => SetValue(SelectedTapIdProperty, value);
+            get => GetValue<int>(SelectedTabIdProperty);
+            set => SetValue(SelectedTabIdProperty, value);
         }
-        public static readonly PropertyData SelectedTapIdProperty = RegisterProperty(nameof(SelectedTapId), typeof(int), 0);
+        public static readonly PropertyData SelectedTabIdProperty = RegisterProperty(nameof(SelectedTabId), typeof(int), 0);
+
+        public bool IsLevelOpen { get; set; }
 
         #endregion
 
@@ -67,14 +76,19 @@ namespace GridLevelEditor.ViewModels
         public Command Closing { get; private set; }
         private void OnClosingExecute()
         {
-            try
+            if (IsLevelOpen)
             {
-                model.UpdateData(GridDataTransformer.GetLevelDataFromGrid(levelContent.GridLevel, model.GetLevelSize(), model.GetElems()));
-                model.Save();
-            }
-            catch (Exception e)
-            {
-                dialogManager.SavingError(e.ToString());
+                try
+                {
+                    levelContent.ViewModel.SetIdsUnique();
+                    model.UpdateData(GridDataTransformer.GetLevelDataFromGrid(levelContent.GridLevel, model.GetLevelSize(), model.GetElems()));
+                    model.Save();
+                }
+                catch (Exception e)
+                {
+                    dialogManager.SavingError(e.ToString());
+                }
+                IsLevelOpen = false;
             }
         }
 
@@ -88,12 +102,15 @@ namespace GridLevelEditor.ViewModels
         private void OnBindLevelContentExecute(LevelContent levelContent)
         {
             this.levelContent = levelContent;
-            startWindow.ViewModel.SetCreationGrid((rows, cols, size) => {
-                levelContent.ViewModel.CreateGrid(rows, cols, size);
+            startWindow.ViewModel.SetCreationGrid((name, rows, cols) => {
+                levelContent.ViewModel.CreateGrid(rows, cols, 50);
                 model.SetLevelSize(rows, cols);
+                model.LevelName = name;
                 model.UpdateData(GridDataTransformer.GetLevelDataFromGrid(levelContent.GridLevel, model.GetLevelSize(), model.GetElems()));
                 model.Save();
-                SelectedTapId = 1;
+                SelectedTabId = 1;
+                UpdateTitle();
+                IsLevelOpen = true;
             });
             levelContent.ViewModel.SetFillingGrid((grid, changer) => { GridDataTransformer.FillGridFromLevelData(grid, new GridLength(50), model.GetLevelData(), model.GetLevelSize(), model.GetElems(), changer); });
             levelContent.ViewModel.SetAdditionMgElem(model.AddMgElem);
@@ -102,6 +119,57 @@ namespace GridLevelEditor.ViewModels
             levelContent.ViewModel.CreateLoadedLevel(model.GetElems());
         }
 
+        public Command<OpenLevelForm> BindOpenLevelForm { get; private set; }
+        private void OnBindOpenLevelFormExecute(OpenLevelForm openLevelForm)
+        {
+            this.openLevelForm = openLevelForm;
+            this.openLevelForm.ViewModel.SetLevelSelected((lvl) => {
+                model.Load(lvl);
+                SelectedTabId = 1;
+                IsLevelOpen = true;
+                UpdateTitle();
+                levelContent.ViewModel.CreateLoadedLevel(model.GetElems());
+            });
+        }
+
+        public Command CreateNewLevel { get; private set; }
+        private void OnCreateNewLevelExecute()
+        {
+            if(SelectedTabId == 1)
+            {
+                OnClosingExecute();
+            }
+            SelectedTabId = 0;
+            model.ReInit();
+            levelContent.ViewModel.ReInit();
+            UpdateTitle();
+        }
+
+        public Command OpenExistsLevel { get; private set; }
+        private void OnOpenExistsLevelExecute()
+        {
+            if (SelectedTabId == 1)
+            {
+                OnClosingExecute();
+            }
+            model.ReInit();
+            levelContent.ViewModel.ReInit();
+            UpdateTitle();
+
+            openLevelForm.ViewModel.LoadLevels();
+            SelectedTabId = 2;
+        }
+
         #endregion
+
+        private void UpdateTitle()
+        {
+            string levelName = "";
+            if (model.LevelName != "")
+            {
+                levelName = " | " + model.LevelName;
+            }
+            TitleText = "Grid Level Editor v1.0" + levelName;
+        }
     }
 }

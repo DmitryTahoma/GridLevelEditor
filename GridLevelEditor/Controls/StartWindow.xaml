@@ -22,7 +22,6 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
-            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0" 
@@ -53,16 +52,7 @@
                  Style="{StaticResource LeftTableInput}"
                  Text="{Binding ElementName=ViewModel, Path=LevelHeightText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-        <TextBlock Grid.Row="3" 
-                   Grid.Column="0" 
-                   Style="{StaticResource RightTableText}"
-                   Text="Размер клетки уровня:"/>
-        <TextBox Grid.Row="3"
-                 Grid.Column="1"
-                 Style="{StaticResource LeftTableInput}"
-                 Text="{Binding ElementName=ViewModel, Path=LevelCellSizeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-
-        <Button Grid.Row="4"
+        <Button Grid.Row="3"
                 Grid.ColumnSpan="2"
                 Content="Создать"
                 Style="{StaticResource MiddleFont}">

@@ -1,4 +1,5 @@
 ﻿using GridLevelEditor.Models;
+using System.Collections.ObjectModel;
 using System.IO;
 
 namespace GridLevelEditor.Objects
@@ -21,6 +22,10 @@ namespace GridLevelEditor.Objects
             Directory.CreateDirectory("Levels");
             Directory.CreateDirectory("Levels/" + levelName);
             string datafromfile = ReadFromFile("Levels/" + levelName + "/.leveldata");
+            if (datafromfile == "")
+            {
+                return new Level();
+            }
             string[] loadedLeveldata = datafromfile.Split(new string[] { Splitter.Global }, System.StringSplitOptions.RemoveEmptyEntries);
 
             Level level = new Level();
@@ -109,6 +114,23 @@ namespace GridLevelEditor.Objects
             Directory.CreateDirectory("Levels");
             Directory.CreateDirectory("Levels/" + level.Name);
             WriteToFile("Levels/" + level.Name + "/.leveldata", level.Name, level.Height.ToString(), level.Width.ToString(), levelElems, levelData);
+        }
+
+        public static void GetAllLevels(ObservableCollection<Level> levels)
+        {
+            if(Directory.Exists("Levels"))
+            {
+                string[] paths = Directory.GetDirectories("Levels\\");
+                foreach(string path in paths)
+                {
+                    string[] nodes = path.Split('\\');
+                    if(nodes.Length > 0)
+                    {
+                        string levelName = nodes[nodes.Length - 1];
+                        levels.Add(GetLevelData(levelName));
+                    }
+                }
+            }
         }
 
         private static string ReadFromFile(string filename)

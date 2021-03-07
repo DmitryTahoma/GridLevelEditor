@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="GridLevelEditor.Controls.OpenLevelForm"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GridLevelEditor.Controls"
+             xmlns:vm="clr-namespace:GridLevelEditor.ViewModels.Controls"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:catel="http://schemas.catelproject.com"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.DataContext>
+        <vm:OpenLevelFormViewModel x:Name="ViewModel"/>
+    </UserControl.DataContext>
+    <ListView SelectionMode="Single" 
+              ItemsSource="{Binding ElementName=ViewModel, Path=Levels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+              SelectedItem="{Binding ElementName=ViewModel, Path=SelectedLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <ListView.View>
+            <GridView>
+                <GridViewColumn Header="Имя"
+                                Width="250"
+                                DisplayMemberBinding="{Binding Path=Name}"/>
+                <GridViewColumn Header="Высота"
+                                Width="60"
+                                DisplayMemberBinding="{Binding Path=Height}"/>
+                <GridViewColumn Header="Ширина"
+                                Width="60"
+                                DisplayMemberBinding="{Binding Path=Width}"/>
+            </GridView>
+        </ListView.View>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseDoubleClick">
+                <catel:EventToCommand Command="{Binding LoadLevel}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+    </ListView>
+</UserControl>

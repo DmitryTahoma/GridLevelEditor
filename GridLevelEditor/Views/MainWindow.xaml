@@ -15,14 +15,47 @@
     <Window.DataContext>
         <vm:MainWindowViewModel x:Name="ViewModel"/>
     </Window.DataContext>
-    <TabControl SelectedIndex="{Binding ElementName=ViewModel, Path=SelectedTapId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-        <TabItem Visibility="Visible">
-            <controls:StartWindow x:Name="StartWindow"/>
-        </TabItem>
-        <TabItem Visibility="Visible">
-            <controls:LevelContent x:Name="LevelContent"/>
-        </TabItem>
-    </TabControl>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="Файл">
+                <MenuItem Header="Создать новый уровень">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=CreateNewLevel}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </MenuItem>
+                <MenuItem Header="Открыть уровень">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=OpenExistsLevel}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </MenuItem>
+                <MenuItem Header="Удалить текущий уровень"/>
+                <Separator/>
+                <MenuItem Header="Экспорт уровня">
+                    <MenuItem Header="XML"/>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <TabControl Grid.Row="1"
+                    SelectedIndex="{Binding ElementName=ViewModel, Path=SelectedTabId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <TabItem Visibility="Collapsed">
+                <controls:StartWindow x:Name="StartWindow"/>
+            </TabItem>
+            <TabItem Visibility="Collapsed">
+                <controls:LevelContent x:Name="LevelContent"/>
+            </TabItem>
+            <TabItem Visibility="Collapsed">
+                <controls:OpenLevelForm x:Name="OpenLevelForm"/>
+            </TabItem>
+        </TabControl>
+    </Grid>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=Closing}"/>
@@ -34,6 +67,10 @@
         <i:EventTrigger EventName="Loaded">
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindLevelContent}"
                                   CommandParameter="{Binding ElementName=LevelContent}"/>
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindOpenLevelForm}"
+                                  CommandParameter="{Binding ElementName=OpenLevelForm}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 </Window>

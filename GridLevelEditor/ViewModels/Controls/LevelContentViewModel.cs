@@ -4,6 +4,7 @@ using GridLevelEditor.Models;
 using GridLevelEditor.Objects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -23,7 +24,7 @@ namespace GridLevelEditor.ViewModels.Controls
         private Action cleansingMgElems;
         private FillingGridHandler fillingGrid;
 
-        Grid grid;
+        private Grid grid;
         private StackPanel mgElemsStack;
         private List<MgElemControl> imagesSelect;
 
@@ -78,6 +79,7 @@ namespace GridLevelEditor.ViewModels.Controls
                     if (imagesSelect.Count == 1)
                     {
                         control.ViewModel.SelectVisibility = Visibility.Visible;
+                        SelectedMgElem = control;
                     }
                 }
             }
@@ -220,6 +222,45 @@ namespace GridLevelEditor.ViewModels.Controls
                 control.ViewModel.TextIndex = elem.Id;
                 imagesSelect.Add(control);
             }
+        }
+
+        public void SetIdsUnique()
+        {
+            int uniqueId = 0;
+            foreach(MgElemControl elem in imagesSelect)
+            {
+                if(elem.ViewModel.TextIndex == "")
+                {
+                    string id = "[]";
+                    for (int count = -1; count != 0; uniqueId++)
+                    {
+                        id = '[' + uniqueId.ToString() + ']';
+                        count = imagesSelect.Count((el) => el.ViewModel.TextIndex == id);
+                    }
+                    elem.ViewModel.TextIndex = id;
+                }
+            }
+
+            foreach (MgElemControl elem in imagesSelect)
+            {
+                string id = elem.ViewModel.TextIndex;
+                IEnumerable<MgElemControl> replicates = imagesSelect.Where((el) => el.ViewModel.TextIndex == id);
+                if (replicates.Count() > 1)
+                {
+                    uniqueId = 1;
+                    foreach (MgElemControl replicator in replicates)
+                    {
+                        replicator.ViewModel.TextIndex += ('(' + uniqueId.ToString() + ')');
+                        uniqueId++;
+                    }
+                }
+            }
+        }
+
+        public void ReInit()
+        {
+            imagesSelect.Clear();
+            SelectedMgElem = null;
         }
     }
 }

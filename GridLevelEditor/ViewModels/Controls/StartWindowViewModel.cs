@@ -6,7 +6,7 @@ namespace GridLevelEditor.ViewModels.Controls
 {
     class StartWindowViewModel : ViewModelBase
     {
-        public delegate void CreationGridHandler(int height, int width, int cellSize);
+        public delegate void CreationGridHandler(string name, int height, int width);
 
         private Validator v;
         private CreationGridHandler creationGrid;
@@ -42,13 +42,6 @@ namespace GridLevelEditor.ViewModels.Controls
         }
         public static readonly PropertyData LevelHeightTextProperty = RegisterProperty(nameof(LevelHeightText), typeof(string), "");
 
-        public string LevelCellSizeText
-        {
-            get => GetValue<string>(LevelCellSizeTextProperty);
-            set => SetValue(LevelCellSizeTextProperty, v.IntString(value, GetValue<string>(LevelCellSizeTextProperty)));
-        }
-        public static readonly PropertyData LevelCellSizeTextProperty = RegisterProperty(nameof(LevelCellSizeText), typeof(string), "");
-
         #endregion
 
         #region Commands
@@ -70,13 +63,7 @@ namespace GridLevelEditor.ViewModels.Controls
                     cols = pCols;
                 }
 
-                int size = 50;
-                if(int.TryParse(LevelCellSizeText, out int pSize))
-                {
-                    size = pSize;
-                }
-
-                creationGrid.Invoke(rows, cols, size);
+                creationGrid.Invoke(LevelName, rows, cols);
             }
         }
 

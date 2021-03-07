@@ -14,24 +14,39 @@ namespace GridLevelEditor.Models
             get
             { 
                 if(level != null)
-                {
                     return level.Name; 
-                }
+
                 return "";
             }
+            set
+            {
+                if (value != null)
+                    level.Name = value;
+            }
         }
+
+        public bool IsLoaded { private set; get; }
 
         public LevelEditor()
         {
             string[] data = FileIO.GetLastData();
+            IsLoaded = false;
+
             if(data.Length > 0)
             {
                 level = Level.GetLevel(data[0]);
+                IsLoaded = true;
             }
             else
             {
                 level = new Level();
             }
+        }
+
+        public void ReInit()
+        {
+            level = new Level();
+            IsLoaded = false;
         }
 
         public void Save()
@@ -81,6 +96,12 @@ namespace GridLevelEditor.Models
         public string[][] GetLevelData()
         {
             return level.Data;
+        }
+
+        public void Load(Level level)
+        {
+            this.level = level;
+            IsLoaded = true;
         }
     }
 }
