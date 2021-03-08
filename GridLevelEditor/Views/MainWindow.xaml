@@ -36,7 +36,13 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>
-                <MenuItem Header="Удалить текущий уровень"/>
+                <MenuItem Header="Удалить текущий уровень">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=DeleteCurrentLevel}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </MenuItem>
                 <Separator/>
                 <MenuItem Header="Экспорт уровня">
                     <MenuItem Header="XML"/>

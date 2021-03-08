@@ -49,6 +49,7 @@ namespace GridLevelEditor.ViewModels
             BindOpenLevelForm = new Command<OpenLevelForm>(OnBindOpenLevelFormExecute);
             CreateNewLevel = new Command(OnCreateNewLevelExecute);
             OpenExistsLevel = new Command(OnOpenExistsLevelExecute);
+            DeleteCurrentLevel = new Command(OnDeleteCurrentLevelExecute);
         }
 
         #region Properties
@@ -158,6 +159,24 @@ namespace GridLevelEditor.ViewModels
 
             openLevelForm.ViewModel.LoadLevels();
             SelectedTabId = 2;
+        }
+
+        public Command DeleteCurrentLevel { get; private set; }
+        private void OnDeleteCurrentLevelExecute()
+        {
+            if(SelectedTabId == 1 && dialogManager.AreYouSureDialog("удалить текущий уровень?") == System.Windows.Forms.DialogResult.Yes)
+            {
+                try
+                {
+                    model.DeleteLevel();
+                    SelectedTabId = 0;
+                    IsLevelOpen = false;
+                }
+                catch(Exception e)
+                {
+                    dialogManager.DeletionError(e.ToString());
+                }
+            }
         }
 
         #endregion

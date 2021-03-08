@@ -133,6 +133,23 @@ namespace GridLevelEditor.Objects
             }
         }
 
+        public static void DeleteLevel(Level level)
+        {
+            Directory.CreateDirectory("Levels");
+            string levelDir = "Levels/" + level.Name;
+            if (Directory.Exists(levelDir))
+            {
+                DeleteFolder(levelDir);
+            }
+        }
+
+        public static bool LevelExists(string levelName)
+        {
+            Directory.CreateDirectory("Levels");
+            string levelDir = "Levels/" + levelName;
+            return Directory.Exists(levelDir);
+        }
+
         private static string ReadFromFile(string filename)
         {
             string res = "";
@@ -167,6 +184,22 @@ namespace GridLevelEditor.Objects
                     writer.Write(res);
                 }
             }
+        }
+
+        private static void DeleteFolder(string path)
+        {
+            string[] dirs = Directory.GetDirectories(path);
+            foreach (string dir in dirs)
+            {
+                DeleteFolder(dir);
+            }
+
+            string[] files = Directory.GetFiles(path);
+            foreach (string file in files)
+            {
+                File.Delete(file);
+            }
+            Directory.Delete(path);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace GridLevelEditor.Models
             string[] data = FileIO.GetLastData();
             IsLoaded = false;
 
-            if(data.Length > 0)
+            if(data.Length > 0 && FileIO.LevelExists(data[0]))
             {
                 level = Level.GetLevel(data[0]);
                 IsLoaded = true;
@@ -102,6 +102,12 @@ namespace GridLevelEditor.Models
         {
             this.level = level;
             IsLoaded = true;
+        }
+
+        public void DeleteLevel()
+        {
+            FileIO.DeleteLevel(level);
+            IsLoaded = false;
         }
     }
 }
