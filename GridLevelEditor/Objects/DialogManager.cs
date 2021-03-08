@@ -7,8 +7,17 @@ namespace GridLevelEditor.Objects
         public string GetImageFilepath()
         {
             OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Title = "Выберите изображение";
+            dialog.Title = "GridLevelEditor | Выберите изображение";
             dialog.Filter = "Изображение (*.bmp;*.jpg;*.gif;*.png)|*.bmp;*.jpg;*.gif;*.png";
+            dialog.ShowDialog();
+            return dialog.FileName;
+        }
+
+        public string GetFileExportXml()
+        {
+            SaveFileDialog dialog = new SaveFileDialog();
+            dialog.Title = "GridLevelEditor | Экспорт в XML";
+            dialog.Filter = "Файл XML (*.xml)|*.xml";
             dialog.ShowDialog();
             return dialog.FileName;
         }
@@ -53,6 +62,12 @@ namespace GridLevelEditor.Objects
         {
             return ErrorMessageBox("Во время удаления уровня произошла ошибка!\n" + errorMessage,
                                    "GridLevelEditor | Ошибка удаления уровня");
+        }
+
+        public DialogResult ExportError(string errorMessage)
+        {
+            return ErrorMessageBox("Во время экспорта уровня произошла ошибка!\n" + errorMessage,
+                                   "GridLevelEditor | Ошибка экспорта уровня");
         }
 
         private DialogResult ErrorMessageBox(string text, string caption)

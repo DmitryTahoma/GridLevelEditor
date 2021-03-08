@@ -50,6 +50,7 @@ namespace GridLevelEditor.ViewModels
             CreateNewLevel = new Command(OnCreateNewLevelExecute);
             OpenExistsLevel = new Command(OnOpenExistsLevelExecute);
             DeleteCurrentLevel = new Command(OnDeleteCurrentLevelExecute);
+            ExportToXml = new Command(OnExportToXmlExecute);
         }
 
         #region Properties
@@ -79,16 +80,7 @@ namespace GridLevelEditor.ViewModels
         {
             if (IsLevelOpen)
             {
-                try
-                {
-                    levelContent.ViewModel.SetIdsUnique();
-                    model.UpdateData(GridDataTransformer.GetLevelDataFromGrid(levelContent.GridLevel, model.GetLevelSize(), model.GetElems()));
-                    model.Save();
-                }
-                catch (Exception e)
-                {
-                    dialogManager.SavingError(e.ToString());
-                }
+                TrySaveLevel();
                 IsLevelOpen = false;
             }
         }
@@ -179,6 +171,27 @@ namespace GridLevelEditor.ViewModels
             }
         }
 
+        public Command ExportToXml { get; private set; }
+        private void OnExportToXmlExecute()
+        {
+            if(SelectedTabId == 1)
+            {
+                string path = dialogManager.GetFileExportXml();
+                if(path != "")
+                {
+                    try
+                    {
+                        TrySaveLevel();
+                        model.ExportToXml(path);
+                    }
+                    catch(Exception e)
+                    {
+                        dialogManager.ExportError(e.ToString());
+                    }
+                }
+            }
+        }
+
         #endregion
 
         private void UpdateTitle()
@@ -189,6 +202,20 @@ namespace GridLevelEditor.ViewModels
                 levelName = " | " + model.LevelName;
             }
             TitleText = "Grid Level Editor v1.0" + levelName;
+        }
+
+        private void TrySaveLevel()
+        {
+            try
+            {
+                levelContent.ViewModel.SetIdsUnique();
+                model.UpdateData(GridDataTransformer.GetLevelDataFromGrid(levelContent.GridLevel, model.GetLevelSize(), model.GetElems()));
+                model.Save();
+            }
+            catch (Exception e)
+            {
+                dialogManager.SavingError(e.ToString());
+            }
         }
     }
 }

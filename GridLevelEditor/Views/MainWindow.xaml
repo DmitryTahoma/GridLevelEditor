@@ -44,8 +44,12 @@
                     </i:Interaction.Triggers>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Экспорт уровня">
-                    <MenuItem Header="XML"/>
+                <MenuItem Header="Экспорт уровня [XML]">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=ExportToXml}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 </MenuItem>
             </MenuItem>
         </Menu>

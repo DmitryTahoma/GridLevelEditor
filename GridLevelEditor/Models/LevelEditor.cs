@@ -2,6 +2,7 @@
 using GridLevelEditor.Objects;
 using System;
 using System.Collections.Generic;
+using System.Xml;
 
 namespace GridLevelEditor.Models
 {
@@ -108,6 +109,30 @@ namespace GridLevelEditor.Models
         {
             FileIO.DeleteLevel(level);
             IsLoaded = false;
+        }
+
+        public void ExportToXml(string path)
+        {
+            XmlDocument xml = new XmlDocument();
+            XmlNode root = xml.CreateElement("level");
+            XmlAttribute name = xml.CreateAttribute("name");
+            name.Value = level.Name;
+            root.Attributes.Append(name);
+            xml.AppendChild(root);
+
+            foreach(string[] row in level.Data)
+            {
+                XmlNode xmlRow = xml.CreateElement("row");
+                foreach(string elem in row)
+                {
+                    XmlNode xmlElem = xml.CreateElement("element");
+                    xmlElem.InnerText = elem;
+                    xmlRow.AppendChild(xmlElem);
+                }
+                root.AppendChild(xmlRow);
+            }
+
+            xml.Save(path);
         }
     }
 }
