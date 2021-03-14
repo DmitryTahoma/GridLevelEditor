@@ -70,6 +70,11 @@ namespace GridLevelEditor.Objects
                                    "GridLevelEditor | Ошибка экспорта уровня");
         }
 
+        public DialogResult LevelIsAlreadyExists(string levelName)
+        {
+            return ErrorMessageBox("Уровень с таким именем уже существует!", "GridLevelEditor | Уровень уже существует");
+        }
+
         private DialogResult ErrorMessageBox(string text, string caption)
         {
             return MessageBox.Show(text, 

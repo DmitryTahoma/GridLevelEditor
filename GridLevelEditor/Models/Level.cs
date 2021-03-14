@@ -19,10 +19,5 @@ namespace GridLevelEditor.Models
             Width = 0;
             Data = new string[0][];
         }
-
-        public static Level GetLevel(string name)
-        {
-            return FileIO.GetLevelData(name); 
-        }
     }
 }

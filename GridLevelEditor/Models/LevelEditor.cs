@@ -35,7 +35,7 @@ namespace GridLevelEditor.Models
 
             if(data.Length > 0 && FileIO.LevelExists(data[0]))
             {
-                level = Level.GetLevel(data[0]);
+                level = FileIO.GetLevelData(data[0]);
                 IsLoaded = true;
             }
             else

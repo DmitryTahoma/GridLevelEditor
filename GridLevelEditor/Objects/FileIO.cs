@@ -84,6 +84,11 @@ namespace GridLevelEditor.Objects
                     level.Data[i][j] = cols[j];
                 }
             }
+
+            if(loadedLeveldata[0] != levelName)
+            {
+                level.Name = levelName;
+            }
             return level;
         }
 

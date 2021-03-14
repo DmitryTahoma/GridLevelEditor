@@ -11,12 +11,16 @@ namespace GridLevelEditor.ViewModels.Controls
         private Validator v;
         private CreationGridHandler creationGrid;
 
+        private DialogManager dialogManager;
+
         public StartWindowViewModel()
         {
             v = new Validator();
             creationGrid = null;
 
             CreateLevel = new Command(OnCreateLevelExecute);
+
+            dialogManager = new DialogManager();
         }
 
         #region Properties
@@ -51,19 +55,26 @@ namespace GridLevelEditor.ViewModels.Controls
         {
             if(creationGrid != null)
             {
-                int rows = 1;
-                if(int.TryParse(LevelHeightText, out int pRows))
+                if (FileIO.LevelExists(LevelName))
                 {
-                    rows = pRows;
+                    dialogManager.LevelIsAlreadyExists(LevelName);
                 }
-
-                int cols = 1;
-                if(int.TryParse(LevelWidthText, out int pCols))
+                else
                 {
-                    cols = pCols;
-                }
+                    int rows = 1;
+                    if (int.TryParse(LevelHeightText, out int pRows))
+                    {
+                        rows = pRows;
+                    }
 
-                creationGrid.Invoke(LevelName, rows, cols);
+                    int cols = 1;
+                    if (int.TryParse(LevelWidthText, out int pCols))
+                    {
+                        cols = pCols;
+                    }
+
+                    creationGrid.Invoke(LevelName, rows, cols);
+                }
             }
         }
 
