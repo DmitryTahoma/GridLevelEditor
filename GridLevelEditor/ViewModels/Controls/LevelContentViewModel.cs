@@ -44,6 +44,7 @@ namespace GridLevelEditor.ViewModels.Controls
             AddMgElem = new Command(OnAddMgElemExecute);
             RemoveMgElem = new Command(OnRemoveMgElemExecute);
             FillAllVoids = new Command(OnFillAllVoidsExecute);
+            ClearField = new Command(OnClearFieldExecute);
             BindStackPanel = new Command<StackPanel>(OnBindStackPanelExecute);
             BindGrid = new Command<Grid>(OnBindGridExecute);
         }
@@ -122,6 +123,18 @@ namespace GridLevelEditor.ViewModels.Controls
                             img.Source = SelectedMgElem.ImgControl.Source;
                         }
                     }
+                }
+            }
+        }
+
+        public Command ClearField { get; private set; }
+        private void OnClearFieldExecute()
+        {
+            foreach (UIElement control in grid.Children)
+            {
+                if(control is Image img)
+                {
+                    img.Source = ResourceDriver.GetVoidBmp();
                 }
             }
         }
