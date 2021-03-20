@@ -74,6 +74,10 @@ namespace GridLevelEditor.ViewModels.Controls
                     }
 
                     creationGrid.Invoke(LevelName, rows, cols);
+
+                    LevelName = "";
+                    LevelWidthText = "";
+                    LevelHeightText = "";
                 }
             }
         }
