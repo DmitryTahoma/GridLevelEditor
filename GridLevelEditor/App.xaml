@@ -28,6 +28,11 @@
                 <Setter Property="VerticalContentAlignment" Value="Center"/>
                 <Setter Property="Padding" Value="20, 0, 0, 0"/>
             </Style>
+            <Style x:Key="ButtonWithImage"
+                   TargetType="Button">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>
