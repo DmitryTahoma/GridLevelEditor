@@ -8,13 +8,14 @@ namespace GridLevelEditor.ViewModels.Controls
 {
     class OpenLevelFormViewModel : ViewModelBase
     {
-        public delegate void LoadLevelHandler(Level level);
+        public delegate void LoadLevelHandler(Level level, OpenType mode);
 
         private LoadLevelHandler onLevelSelected;
 
         public OpenLevelFormViewModel()
         {
             Levels = new ObservableCollection<Level>();
+            Mode = OpenType.Open;
 
             LoadLevel = new Command(OnLoadLevelExecute);
 
@@ -24,6 +25,8 @@ namespace GridLevelEditor.ViewModels.Controls
         #region Properties
 
         public ObservableCollection<Level> Levels { set; get; }
+
+        public OpenType Mode { set; get; }
 
         public Level SelectedLevel
         {
@@ -39,7 +42,7 @@ namespace GridLevelEditor.ViewModels.Controls
         public Command LoadLevel { get; private set; }
         private void OnLoadLevelExecute()
         {
-            onLevelSelected?.Invoke(SelectedLevel);
+            onLevelSelected?.Invoke(SelectedLevel, Mode);
         }
 
         #endregion
@@ -56,6 +59,12 @@ namespace GridLevelEditor.ViewModels.Controls
             {
                 onLevelSelected = hanlder;
             }
+        }
+
+        public enum OpenType
+        {
+            Open,
+            CopyMgElems
         }
     }
 }

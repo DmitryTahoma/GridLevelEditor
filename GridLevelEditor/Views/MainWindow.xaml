@@ -1,86 +1,92 @@
-﻿<Window x:Class="GridLevelEditor.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GridLevelEditor"
-        xmlns:vm="clr-namespace:GridLevelEditor.ViewModels"
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:catel="http://schemas.catelproject.com"
-        xmlns:controls="clr-namespace:GridLevelEditor.Controls"
-        mc:Ignorable="d"
-        Title="{Binding TitleText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-        Height="450" Width="800"
-        Icon="/Resources/icon.png">
+﻿<Window
+    x:Class="GridLevelEditor.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:catel="http://schemas.catelproject.com"
+    xmlns:controls="clr-namespace:GridLevelEditor.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:GridLevelEditor"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:GridLevelEditor.ViewModels"
+    Title="{Binding TitleText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+    Width="800"
+    Height="450"
+    Icon="/Resources/icon.png"
+    mc:Ignorable="d"
+    WindowState="Maximized">
     <Window.DataContext>
-        <vm:MainWindowViewModel x:Name="ViewModel"/>
+        <vm:MainWindowViewModel x:Name="ViewModel" />
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="Файл">
                 <MenuItem Header="Создать новый уровень">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=CreateNewLevel}"/>
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=CreateNewLevel}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>
                 <MenuItem Header="Открыть уровень">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=OpenExistsLevel}"/>
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=OpenExistsLevel}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>
                 <MenuItem Header="Удалить текущий уровень">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=DeleteCurrentLevel}"/>
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=DeleteCurrentLevel}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>
-                <Separator/>
+                <Separator />
+                <MenuItem Header="Импорт картинок из другого уровня">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Click">
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=CopyMgElemsFromExistsLevel}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </MenuItem>
                 <MenuItem Header="Экспорт уровня [XML]">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Click">
-                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=ExportToXml}"/>
+                            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=ExportToXml}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </MenuItem>
             </MenuItem>
         </Menu>
-        <TabControl Grid.Row="1"
-                    SelectedIndex="{Binding ElementName=ViewModel, Path=SelectedTabId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <TabControl Grid.Row="1" SelectedIndex="{Binding ElementName=ViewModel, Path=SelectedTabId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TabItem Visibility="Collapsed">
-                <controls:StartWindow x:Name="StartWindow"/>
+                <controls:StartWindow x:Name="StartWindow" />
             </TabItem>
             <TabItem Visibility="Collapsed">
-                <controls:LevelContent x:Name="LevelContent"/>
+                <controls:LevelContent x:Name="LevelContent" />
             </TabItem>
             <TabItem Visibility="Collapsed">
-                <controls:OpenLevelForm x:Name="OpenLevelForm"/>
+                <controls:OpenLevelForm x:Name="OpenLevelForm" />
             </TabItem>
         </TabControl>
     </Grid>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
-            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=Closing}"/>
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=Closing}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
-            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindStartWindow}"
-                                  CommandParameter="{Binding ElementName=StartWindow}"/>
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindStartWindow}" CommandParameter="{Binding ElementName=StartWindow}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
-            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindLevelContent}"
-                                  CommandParameter="{Binding ElementName=LevelContent}"/>
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindLevelContent}" CommandParameter="{Binding ElementName=LevelContent}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
-            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindOpenLevelForm}"
-                                  CommandParameter="{Binding ElementName=OpenLevelForm}"/>
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindOpenLevelForm}" CommandParameter="{Binding ElementName=OpenLevelForm}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 </Window>

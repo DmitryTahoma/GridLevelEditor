@@ -4,6 +4,7 @@ using GridLevelEditor.Controls;
 using GridLevelEditor.Models;
 using GridLevelEditor.Objects;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 
 namespace GridLevelEditor.ViewModels
@@ -50,6 +51,7 @@ namespace GridLevelEditor.ViewModels
             CreateNewLevel = new Command(OnCreateNewLevelExecute);
             OpenExistsLevel = new Command(OnOpenExistsLevelExecute);
             DeleteCurrentLevel = new Command(OnDeleteCurrentLevelExecute);
+            CopyMgElemsFromExistsLevel = new Command(OnCopyMgElemsFromExistsLevelExecute);
             ExportToXml = new Command(OnExportToXmlExecute);
         }
 
@@ -116,12 +118,23 @@ namespace GridLevelEditor.ViewModels
         private void OnBindOpenLevelFormExecute(OpenLevelForm openLevelForm)
         {
             this.openLevelForm = openLevelForm;
-            this.openLevelForm.ViewModel.SetLevelSelected((lvl) => {
-                model.Load(lvl);
+            this.openLevelForm.ViewModel.SetLevelSelected((lvl, mode) => {
+                if (mode == Controls.OpenLevelFormViewModel.OpenType.Open)
+                {
+                    model.Load(lvl);
+                    levelContent.ViewModel.CreateLoadedLevel(model.GetElems());
+                }
+                else if(mode == Controls.OpenLevelFormViewModel.OpenType.CopyMgElems)
+                {
+                    foreach(MgElem elem in lvl.Elems)
+                    {
+                        model.AddMgElem(elem);
+                    }
+                    levelContent.ViewModel.CreateLoadedLevel(lvl.Elems);
+                }
                 SelectedTabId = 1;
                 IsLevelOpen = true;
                 UpdateTitle();
-                levelContent.ViewModel.CreateLoadedLevel(model.GetElems());
             });
         }
 
@@ -150,6 +163,7 @@ namespace GridLevelEditor.ViewModels
             UpdateTitle();
 
             openLevelForm.ViewModel.LoadLevels();
+            openLevelForm.ViewModel.Mode = Controls.OpenLevelFormViewModel.OpenType.Open;
             SelectedTabId = 2;
         }
 
@@ -168,6 +182,17 @@ namespace GridLevelEditor.ViewModels
                 {
                     dialogManager.DeletionError(e.ToString());
                 }
+            }
+        }
+
+        public Command CopyMgElemsFromExistsLevel { get; private set; }
+        private void OnCopyMgElemsFromExistsLevelExecute()
+        {
+            if(SelectedTabId == 1)
+            {
+                openLevelForm.ViewModel.LoadLevels();
+                openLevelForm.ViewModel.Mode = Controls.OpenLevelFormViewModel.OpenType.CopyMgElems;
+                SelectedTabId = 2;
             }
         }
 
