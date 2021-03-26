@@ -6,6 +6,13 @@ namespace GridLevelEditor.Objects
 {
     public static partial class FileIO
     {
+        private static DialogManager dialogManager;
+
+        static FileIO()
+        {
+            dialogManager = new DialogManager();
+        }
+
         public static string[] GetLastData()
         {
             string datafromfile = ReadFromFile(".gridleveldata");
@@ -60,11 +67,19 @@ namespace GridLevelEditor.Objects
                 {
                     id = "";
                 }
-                level.Elems.Add(new MgElem() 
+                string nextStr = levelElemsArray[i + 1];
+                if (File.Exists(nextStr))
                 {
-                    Id = id,
-                    Image = new System.Windows.Media.Imaging.BitmapImage(new System.Uri(levelElemsArray[i + 1]))
-                });
+                    level.Elems.Add(new MgElem()
+                    {
+                        Id = id,
+                        Image = new System.Windows.Media.Imaging.BitmapImage(new System.Uri(nextStr))
+                    });
+                }
+                else
+                {
+                    dialogManager.FileNotExist(nextStr);
+                }
             }
 
             string levelData = "";

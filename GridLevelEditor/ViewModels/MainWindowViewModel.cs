@@ -4,7 +4,6 @@ using GridLevelEditor.Controls;
 using GridLevelEditor.Models;
 using GridLevelEditor.Objects;
 using System;
-using System.Collections.Generic;
 using System.Windows;
 
 namespace GridLevelEditor.ViewModels

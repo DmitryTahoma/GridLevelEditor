@@ -75,6 +75,11 @@ namespace GridLevelEditor.Objects
             return ErrorMessageBox("Уровень с таким именем уже существует!", "GridLevelEditor | Уровень уже существует");
         }
 
+        public DialogResult FileNotExist(string path)
+        {
+            return ErrorMessageBox("Не найден файл по пути:\n" + path, "GridLevelEditor | Не найден файл по пути");
+        }
+
         private DialogResult ErrorMessageBox(string text, string caption)
         {
             return MessageBox.Show(text, 
