@@ -12,7 +12,6 @@
     Title="{Binding TitleText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
     Width="800"
     Height="450"
-    Icon="/Resources/icon.png"
     mc:Ignorable="d"
     WindowState="Maximized">
     <Window.DataContext>
