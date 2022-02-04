@@ -86,6 +86,9 @@
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=Closing}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=TryLoadLastLevel}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindStartWindow}" CommandParameter="{Binding ElementName=StartWindow}" />
         </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
@@ -93,9 +96,6 @@
         </i:EventTrigger>
         <i:EventTrigger EventName="Loaded">
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindOpenLevelForm}" CommandParameter="{Binding ElementName=OpenLevelForm}" />
-        </i:EventTrigger>
-        <i:EventTrigger EventName="Loaded">
-            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=TryLoadLastLevel}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 </Window>
