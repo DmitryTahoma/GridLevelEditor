@@ -52,6 +52,7 @@ namespace GridLevelEditor.ViewModels
             DeleteCurrentLevel = new Command(OnDeleteCurrentLevelExecute);
             CopyMgElemsFromExistsLevel = new Command(OnCopyMgElemsFromExistsLevelExecute);
             ExportToXml = new Command(OnExportToXmlExecute);
+            ExportToXmlLL8Extras = new Command(OnExportToXmlLL8ExtrasExecute);
         }
 
         #region Properties
@@ -209,6 +210,27 @@ namespace GridLevelEditor.ViewModels
                         model.ExportToXml(path);
                     }
                     catch(Exception e)
+                    {
+                        dialogManager.ExportError(e.ToString());
+                    }
+                }
+            }
+        }
+
+        public Command ExportToXmlLL8Extras { get; private set; }
+        private void OnExportToXmlLL8ExtrasExecute()
+        {
+            if (SelectedTabId == 1)
+            {
+                string path = dialogManager.GetFileExportXml();
+                if (path != "")
+                {
+                    try
+                    {
+                        TrySaveLevel();
+                        model.ExportToXmlLL8Extras(path);
+                    }
+                    catch (Exception e)
                     {
                         dialogManager.ExportError(e.ToString());
                     }

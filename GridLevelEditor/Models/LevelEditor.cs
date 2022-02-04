@@ -134,5 +134,43 @@ namespace GridLevelEditor.Models
 
             xml.Save(path);
         }
+
+        public void ExportToXmlLL8Extras(string path)
+        {
+            XmlDocument xml = new XmlDocument();
+            XmlNode root = xml.CreateElement("LL8ExtrasLevel");
+            xml.AppendChild(root);
+
+            int y = 0;
+            foreach (string[] row in level.Data)
+            {
+                int x = 0;
+                foreach (string elem in row)
+                {
+                    if (!string.IsNullOrWhiteSpace(elem))
+                    {
+                        XmlNode xmlElem = xml.CreateElement("MgElem");
+
+                        XmlAttribute type = xml.CreateAttribute("Type");
+                        type.Value = elem;
+                        xmlElem.Attributes.Append(type);
+
+                        XmlAttribute xAttr = xml.CreateAttribute("X");
+                        xAttr.Value = x.ToString();
+                        xmlElem.Attributes.Append(xAttr);
+
+                        XmlAttribute yAttr = xml.CreateAttribute("Y");
+                        yAttr.Value = y.ToString();
+                        xmlElem.Attributes.Append(yAttr);
+
+                        root.AppendChild(xmlElem);
+                    }
+                    x++;
+                }
+                y++;
+            }
+
+            xml.Save(path);
+        }
     }
 }
