@@ -28,19 +28,8 @@ namespace GridLevelEditor.ViewModels
 
             IsLevelOpen = false;
 
-            try
-            {
-                model = new LevelEditor();
-                if(model.IsLoaded)
-                {
-                    SelectedTabId = 1;
-                    IsLevelOpen = true;
-                }
-            }
-            catch (Exception e)
-            {
-                dialogManager.LoadLevelError(e.ToString());
-            }
+            model = new LevelEditor();
+
             UpdateTitle();
 
             Closing = new Command(OnClosingExecute);
@@ -53,6 +42,7 @@ namespace GridLevelEditor.ViewModels
             CopyMgElemsFromExistsLevel = new Command(OnCopyMgElemsFromExistsLevelExecute);
             ExportToXml = new Command(OnExportToXmlExecute);
             ExportToXmlLL8Extras = new Command(OnExportToXmlLL8ExtrasExecute);
+            TryLoadLastLevel = new Command(OnTryLoadLastLevelExecute);
         }
 
         #region Properties
@@ -136,6 +126,24 @@ namespace GridLevelEditor.ViewModels
                 IsLevelOpen = true;
                 UpdateTitle();
             });
+        }
+
+        public Command TryLoadLastLevel { get; private set; }
+        private void OnTryLoadLastLevelExecute()
+        {
+            try
+            {
+                model.Load();
+                if (model.IsLoaded)
+                {
+                    SelectedTabId = 1;
+                    IsLevelOpen = true;
+                }
+            }
+            catch (Exception e)
+            {
+                dialogManager.LoadLevelError(e.ToString());
+            }
         }
 
         public Command CreateNewLevel { get; private set; }

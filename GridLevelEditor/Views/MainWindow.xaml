@@ -95,5 +95,8 @@
         <i:EventTrigger EventName="Loaded">
             <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=BindOpenLevelForm}" CommandParameter="{Binding ElementName=OpenLevelForm}" />
         </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded">
+            <catel:EventToCommand Command="{Binding ElementName=ViewModel, Path=TryLoadLastLevel}" />
+        </i:EventTrigger>
     </i:Interaction.Triggers>
 </Window>

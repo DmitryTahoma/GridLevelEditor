@@ -30,10 +30,16 @@ namespace GridLevelEditor.Models
 
         public LevelEditor()
         {
+            level = new Level();
+            IsLoaded = false;
+        }
+
+        public void Load()
+        {
             string[] data = FileIO.GetLastData();
             IsLoaded = false;
 
-            if(data.Length > 0 && FileIO.LevelExists(data[0]))
+            if (data.Length > 0 && FileIO.LevelExists(data[0]))
             {
                 level = FileIO.GetLevelData(data[0]);
                 IsLoaded = true;
